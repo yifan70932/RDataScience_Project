@@ -341,12 +341,12 @@ knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling</code
 <ul>
 <li>Islam</li>
 <li>Christianity</li>
-<li>Buddahism</li>
+<li>Buddhism</li>
 <li>Religious Unaffiliated</li>
 </ul>
 <p>from the <a href="http://globalreligiousfutures.org">The Global Religious Future Project</a>. You can visit the <a href="http://globalreligiousfutures.org/explorer#/?subtopic=15&amp;chartType=map&amp;year=2010&amp;data_type=number&amp;religious_affiliation=all&amp;destination=to&amp;countries=Worldwide&amp;age_group=all&amp;gender=all&amp;pdfMode=false">Data Explorer</a> for data about other religions.</p>
 <p>The dataset downloaded is the survey result in 234 countries and predictions made upon them (check <a href="http://globalreligiousfutures.org/explorer/about-grf-data" class="uri">http://globalreligiousfutures.org/explorer/about-grf-data</a> for more information). For each of the three representative religions, the number of believers in the year 2010, 2020, 2030, 2040 and 2050 is separately stored and downloaded in different datasets. The three religions mentioned above were selected to show the general trend of the variation of religious population since that comparing to other religions that have large believer community, these three religions were more spread over the world so that could better represent the religious population community despite factors like politic or local culture.</p>
-<p>For each religion, the data in the year 2010, 2020, 2030, 2040 and 2050 is downloaded and stored separately. The code following the download command read the data from the downloaded CSV file and create a data frame named as “Religion_Year” (e.g. Islam_2010) for each single dataset. The “skip” and “nrow” factor in the read.csv2() function serve to skip the description and space lines in the original file.</p>
+<p>The code following the download command read the data from the downloaded CSV file and create a data frame named as “Religion_Year” (e.g. Islam_2010) for each single dataset. The “skip” and “nrow” factor in the read.csv2() function serve to skip the description and space lines in the original file.</p>
 <p>Download Islam Population data, 2010 - 2050</p>
 <pre class="r"><code>## download the world Islam population data for 2010
 download.file(&quot;http://globalreligiousfutures.org/csv/22411&quot;, &quot;muslim10.csv&quot;)

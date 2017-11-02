@@ -45,14 +45,14 @@ Using download.file() function to download the surveyed and estimated population
 
 * Islam
 * Christianity 
-* Buddahism
+* Buddhism
 * Religious Unaffiliated
 
 from the [The Global Religious Future Project](http://globalreligiousfutures.org). You can visit the [Data Explorer](http://globalreligiousfutures.org/explorer#/?subtopic=15&chartType=map&year=2010&data_type=number&religious_affiliation=all&destination=to&countries=Worldwide&age_group=all&gender=all&pdfMode=false) for data about other religions.
 
 The dataset downloaded is the survey result in 234 countries and predictions made upon them (check http://globalreligiousfutures.org/explorer/about-grf-data for more information). For each of the three representative religions, the number of believers in the year 2010, 2020, 2030, 2040 and 2050 is separately stored and downloaded in different datasets. The three religions mentioned above were selected to show the general trend of the variation of religious population since that comparing to other religions that have large believer community, these three religions were more spread over the world so that could better represent the religious population community despite factors like politic or local culture.
 
-For each religion, the data in the year 2010, 2020, 2030, 2040 and 2050 is downloaded and stored separately. The code following the download command read the data from the downloaded CSV file and create a data frame named as "Religion_Year" (e.g. Islam_2010) for each single dataset. The "skip" and "nrow" factor in the read.csv2() function serve to skip the description and space lines in the original file.
+The code following the download command read the data from the downloaded CSV file and create a data frame named as "Religion_Year" (e.g. Islam_2010) for each single dataset. The "skip" and "nrow" factor in the read.csv2() function serve to skip the description and space lines in the original file.
 
 Download Islam Population data, 2010 - 2050
 ```{r, warning=FALSE} 
