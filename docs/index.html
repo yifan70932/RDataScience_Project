@@ -313,7 +313,7 @@ div.tocify {
 </ol>
 <p>The hypothesis towards this research is that religious population for all the major religions will increase and the community of skeptics would shrink. With the data collected by the Global Religious Future project (<a href="http://globalreligiousfutures.org" class="uri">http://globalreligiousfutures.org</a>), the evolution, from the year 2010 to 2050, in the population of three major religions (i.e. Christianism, Islam and Buddhism) around the world is processed and displayed. The religious unaffiliated population, in addition, is visualized as well. In this project, a series of static and dynamic maps and images (e.g. animation world map, bubble diagram) were produced to show the trend of the evolution of the religious population. With the result from the data processing, Islam would experience the most obvious increasing in the number of believers from now to the year 2050. Buddhism and Christianity communities generally remain static in the coming decades. At the same time, the coming decades will witness the decreasing of the religious unaffiliated population.</p>
 <blockquote>
-<p>Religion, it was thought, would thin out from its more robust, supernaturalist forms or die out altogether. But the theory that technological advancement brings inevitable secularization is now being scrapped or radically rethought. ~ Timothy Keller, &lt; the Reason for God &gt;</p>
+<p><span style="color:blue">Religion, it was thought, would thin out from its more robust, supernaturalist forms or die out altogether. But the theory that technological advancement brings inevitable secularization is now being scrapped or radically rethought.</span> ~ Timothy Keller, &lt; the Reason for God &gt;</p>
 </blockquote>
 </div>
 <div id="materials-and-methods" class="section level1">
@@ -347,6 +347,8 @@ knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling</code
 <p>from the <a href="http://globalreligiousfutures.org">The Global Religious Future Project</a>. You can visit the <a href="http://globalreligiousfutures.org/explorer#/?subtopic=15&amp;chartType=map&amp;year=2010&amp;data_type=number&amp;religious_affiliation=all&amp;destination=to&amp;countries=Worldwide&amp;age_group=all&amp;gender=all&amp;pdfMode=false">Data Explorer</a> for data about other religions.</p>
 <p>The dataset downloaded is the survey result in 234 countries and predictions made upon them (check <a href="http://globalreligiousfutures.org/explorer/about-grf-data" class="uri">http://globalreligiousfutures.org/explorer/about-grf-data</a> for more information). For each of the three representative religions, the number of believers in the year 2010, 2020, 2030, 2040 and 2050 is separately stored and downloaded in different datasets. The three religions mentioned above were selected to show the general trend of the variation of religious population since that comparing to other religions that have large believer community, these three religions were more spread over the world so that could better represent the religious population community despite factors like politic or local culture.</p>
 <p>The code following the download command read the data from the downloaded CSV file and create a data frame named as “Religion_Year” (e.g. Islam_2010) for each single dataset. The “skip” and “nrow” factor in the read.csv2() function serve to skip the description and space lines in the original file.</p>
+<div id="data-downloading" class="section level3">
+<h3>Data Downloading</h3>
 <p>Download Islam Population data, 2010 - 2050</p>
 <pre class="r"><code>## download the world Islam population data for 2010
 download.file(&quot;http://globalreligiousfutures.org/csv/22411&quot;, &quot;muslim10.csv&quot;)
@@ -547,6 +549,11 @@ unaffiliated_2050 &lt;- read.csv2(text = u50,
                                skip = 11,
                                col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
                                nrows = length(u50) - 14)</code></pre>
+</div>
+<div id="simple-visualization-of-the-raw-data" class="section level3">
+<h3>Simple Visualization of the Raw Data</h3>
+<div id="islam-2050-vs.-2010" class="section level4">
+<h4>Islam 2050 VS. 2010</h4>
 <p>Plotting the 2010 Islam Population Map</p>
 <pre class="r"><code>#Loading the Color Palette for Map
 color1 &lt;- brewer.pal(5,&quot;YlOrRd&quot;)
@@ -595,6 +602,9 @@ islam_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2050_is
                addLegend = FALSE)
 do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="christianity-2050-vs.-2010" class="section level4">
+<h4>Christianity 2050 VS. 2010</h4>
 <p>Plotting the 2010 Christian Population Map</p>
 <pre class="r"><code># Plotting the Country Heat Map of Christian Population in 2010
 chris_2010_iso &lt;- as.character(chris_2010$Country_Code)
@@ -633,6 +643,9 @@ chris_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = chris_2050_is
                addLegend = FALSE)
 do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="buddhism-2050-vs.-2010" class="section level4">
+<h4>Buddhism 2050 VS. 2010</h4>
 <p>Plotting the 2010 Buddhism Population Map</p>
 <pre class="r"><code># Plotting the Country Heat Map of Buddhism Population in 2010
 buddha_2010_iso &lt;- as.character(buddha_2010$Country_Code)
@@ -671,6 +684,9 @@ buddha_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = buddha_2050_
                addLegend = FALSE)
 do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+</div>
+<div id="religious-unaffiliated-2050-vs.-2010" class="section level4">
+<h4>Religious Unaffiliated 2050 VS. 2010</h4>
 <p>Plotting the 2010 Religious Unaffiiated Population Map</p>
 <pre class="r"><code># Plotting the Country Heat Map of Religious Unaffiiated Population in 2010
 unaffiliated_2010_iso &lt;- as.character(unaffiliated_2010$Country_Code)
@@ -709,6 +725,8 @@ unaffiliated_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = unaffi
                addLegend = FALSE)
 do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+</div>
+</div>
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>

@@ -14,7 +14,7 @@ b)  How would the skeptic or atheist population varies from now to the year 2050
 
 The hypothesis towards this research is that religious population for all the major religions will increase and the community of skeptics would shrink. With the data collected by the Global Religious Future project (http://globalreligiousfutures.org), the evolution, from the year 2010 to 2050, in the population of three major religions (i.e. Christianism, Islam and Buddhism) around the world is processed and displayed. The religious unaffiliated population, in addition, is visualized as well. In this project, a series of static and dynamic maps and images (e.g. animation world map, bubble diagram) were produced to show the trend of the evolution of the religious population. With the result from the data processing, Islam would experience the most obvious increasing in the number of believers from now to the year 2050. Buddhism and Christianity communities generally remain static in the coming decades. At the same time, the coming decades will witness the decreasing of the religious unaffiliated population.
   
-> Religion, it was thought, would thin out from its more robust, supernaturalist forms or die out altogether. But the theory that technological advancement brings inevitable secularization is now being scrapped or radically rethought.  ~ Timothy Keller, < the Reason for God > 
+> <span style="color:blue">Religion, it was thought, would thin out from its more robust, supernaturalist forms or die out altogether. But the theory that technological advancement brings inevitable secularization is now being scrapped or radically rethought.</span>  ~ Timothy Keller, < the Reason for God > 
 
 # Materials and Methods
 
@@ -54,6 +54,7 @@ The dataset downloaded is the survey result in 234 countries and predictions mad
 
 The code following the download command read the data from the downloaded CSV file and create a data frame named as "Religion_Year" (e.g. Islam_2010) for each single dataset. The "skip" and "nrow" factor in the read.csv2() function serve to skip the description and space lines in the original file.
 
+###Data Downloading
 Download Islam Population data, 2010 - 2050
 ```{r, warning=FALSE} 
 ## download the world Islam population data for 2010
@@ -268,6 +269,11 @@ unaffiliated_2050 <- read.csv2(text = u50,
                                nrows = length(u50) - 14)
 ```
 
+
+###Simple Visualization of the Raw Data
+
+
+####Islam 2050 VS. 2010
 Plotting the 2010 Islam Population Map
 ```{r, echo=TRUE, fig.cap="Country Heat Map of Muslim Population in 2010", message=FALSE, warning=FALSE}
 #Loading the Color Palette for Map
@@ -322,6 +328,8 @@ do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendInterv
 ```
 
 
+####Christianity 2050 VS. 2010
+
 Plotting the 2010 Christian Population Map
 ```{r, fig.cap="Country Heat Map of Christian Population in 2010", message=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Christian Population in 2010
@@ -363,6 +371,9 @@ map2 <- mapCountryData(chris_2050_plot,
                addLegend = FALSE)
 do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
 ```
+
+
+####Buddhism 2050 VS. 2010
 
 
 Plotting the 2010 Buddhism Population Map
@@ -407,6 +418,9 @@ map2 <- mapCountryData(buddha_2050_plot,
                addLegend = FALSE)
 do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
 ```
+
+
+####Religious Unaffiliated 2050 VS. 2010
 
 
 Plotting the 2010 Religious Unaffiiated Population Map
