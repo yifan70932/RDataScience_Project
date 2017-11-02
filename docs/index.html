@@ -9,10 +9,10 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Your name here" />
+<meta name="author" content="Yifan Wang" />
 
 
-<title>I have the best titles</title>
+<title>Evolution111 of Religious Population</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -296,94 +296,301 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">I have the best titles</h1>
-<h3 class="subtitle"><em>Subtitle here if desired</em></h3>
-<h4 class="author"><em>Your name here</em></h4>
+<h1 class="title toc-ignore">Evolution111 of Religious Population</h1>
+<h3 class="subtitle"><em>Visualizing the Prediction of Major Religious Population Changing From 2010 to 2050</em></h3>
+<h4 class="author"><em>Yifan Wang</em></h4>
 
 </div>
 
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>My really awesome and complete introduction will go here.</p>
+<p>With the advancement in science and the spreading of secularism, the problem of the necessaries of religions arises. Especially in younger generations, the ratio of people identified as believers stays low. In 2013, for example, only 9.6% of the Jewish population in the states are between age 18-24 while 11.7% of the U.S. population falls into the same age interval (Saxe and Tighe, 2013). And at the same time 25.6% of Jewish community are older than 65 years old while 19.2% of the U.S. population falls into the age interval (Saxe and Tighe, 2013).</p>
+<p>This project aims to provide a visualization of the changing in the religious and unreligious population to answer the following questions: a) Which religion would have the largest believer group in the coming decades and b) How would the skeptic or atheist population varies from now to the year 2050. The hypothesis towards this research is that religious population for all the major religions will increase and the community of skeptics would shrink. With the data collected by the Global Religious Future project (<a href="http://globalreligiousfutures.org" class="uri">http://globalreligiousfutures.org</a>), the evolution, from the year 2010 to 2050, in the population of three major religions (i.e. Christianism, Islam and Buddhism) around the world is processed and displayed. The religious unaffiliated population, in addition, is visualized as well. In this project, a series of static and dynamic maps and images (e.g. animation world map, bubble diagram) were produced to show the trend of the evolution of the religious population. With the result from the data processing, Islam would become the largest religion and its believers would experience the most obvious increasing from now to the year 2050. At the same time, the coming decades will witness the decreasing of the religious unaffiliated population.</p>
 <blockquote>
-<p>I know words. I have the best words. ~ Donald Trump</p>
+<p>Religion, it was thought, would thin out from its more robust, supernaturalist forms or die out altogether. But the theory that technological advancement brings inevitable secularization is now being scrapped or radically rethought. ~ Timothy Keller, &lt; the Reason for God &gt;</p>
 </blockquote>
 </div>
 <div id="materials-and-methods" class="section level1">
-<h1>Materials and methods</h1>
-<p>Narrative and most code will go here. Describe what you are doing and show how to do it (with code).</p>
-<p>You can do bullets like this:</p>
-<ul>
-<li>The first most important thing</li>
-<li>The second most important thing</li>
-<li>The third most important thing</li>
-</ul>
-<p>You can do numbers like this:</p>
-<ol style="list-style-type: decimal">
-<li>The first most important thing</li>
-<li>The second most important thing</li>
-<li>The third most important thing</li>
-</ol>
-<p>See <a href="http://rmarkdown.rstudio.com/" class="uri">http://rmarkdown.rstudio.com/</a> for all the amazing things you can do.</p>
-<p>Here’s my first code chunk.</p>
-<pre class="r"><code>1+2</code></pre>
-<pre><code>## [1] 3</code></pre>
-<p>Load any required packages in a code chunk (you may need to install some packages):</p>
-<pre class="r"><code>library(dplyr)
+<h1>Materials and Methods</h1>
+<p>Loading required packages (you may need to install some packages):</p>
+<pre class="r"><code>#install.packages(&quot;data.table&quot;)
+#install.packages(&quot;rworldmap&quot;)
+#install.packages(&quot;dplyr&quot;)
+#install.packages(&quot;tidyr&quot;)
+#install.packages(&quot;ggplot2&quot;)
+#install.packages(&quot;maps&quot;)
+library(dplyr)
+library(tidyr)
+library(data.table)
+library(rworldmap)
 library(ggplot2)
 library(maps)
 library(spocc)
+library(maptools)
+library(RColorBrewer)
 knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling</code></pre>
-<p>We are going to use the <code>occ()</code> function to download <em>occurrence</em> records for the American robin (<em>Turdus migratorius</em>) from the <a href="gbif.org">Global Biodiversity Information Facility</a>.</p>
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Turdus-migratorius-002.jpg" alt="alt text" width="200"> <small><small><small>Licensed under CC BY-SA 3.0 via <a href="https://commons.wikimedia.org/wiki/File:Turdus-migratorius-002.jpg#/media/File:Turdus-migratorius-002.jpg">Wikimedia Commons</a></small></small></small></p>
-<pre class="r"><code>## define which species to query
-sp=&#39;Turdus migratorius&#39;
+<p>Using download.file() function to download the surveyed and estimated population for the believer community of</p>
+<ul>
+<li>Islam</li>
+<li>Christianity</li>
+<li>Buddahism</li>
+<li>Religious Unaffiliated</li>
+</ul>
+<p>from the <a href="http://globalreligiousfutures.org">The Global Religious Future Project</a>. You can visit the <a href="http://globalreligiousfutures.org/explorer#/?subtopic=15&amp;chartType=map&amp;year=2010&amp;data_type=number&amp;religious_affiliation=all&amp;destination=to&amp;countries=Worldwide&amp;age_group=all&amp;gender=all&amp;pdfMode=false">Data Explorer</a> for data about other religions.</p>
+<p>The dataset downloaded is the survey result in 234 countries and predictions made upon them (check <a href="http://globalreligiousfutures.org/explorer/about-grf-data" class="uri">http://globalreligiousfutures.org/explorer/about-grf-data</a> for more information). For each of the three representative religions, the number of believers in the year 2010, 2020, 2030, 2040 and 2050 is separately stored and downloaded in different datasets. The three religions mentioned above were selected to show the general trend of the variation of religious population since that comparing to other religions that have large believer community, these three religions were more spread over the world so that could better represent the religious population community despite factors like politic or local culture.</p>
+<p>For each religion, the data in the year 2010, 2020, 2030, 2040 and 2050 is downloaded and stored separately. The code following the download command read the data from the downloaded CSV file and create a data frame named as “Religion_Year” (e.g. Islam_2010) for each single dataset. The “skip” and “nrow” factor in the read.csv2() function serve to skip the description and space lines in the original file.</p>
+<p>Download Islam Population data, 2010 - 2050</p>
+<pre class="r"><code>## download the world Islam population data for 2010
+download.file(&quot;http://globalreligiousfutures.org/csv/22411&quot;, &quot;muslim10.csv&quot;)
+m10 &lt;- readLines(&quot;muslim10.csv&quot;)
+islam_2010 &lt;- read.csv2(text = m10, 
+                        sep = &quot;,&quot;, 
+                        header = FALSE,
+                        skip = 11,
+                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                        nrows = length(m10) - 16)
 
-## run the query and convert to data.frame()
-d = occ(query=sp, from=&#39;ebird&#39;,limit = 100) %&gt;% occ2df()</code></pre>
-<p>This can take a few seconds.</p>
-<pre class="r"><code># Load coastline
-map=map_data(&quot;world&quot;)
+## download the world Islam population data for 2020
+download.file(&quot;http://globalreligiousfutures.org/csv/21689&quot;, &quot;muslim20.csv&quot;)
+m20 &lt;- readLines(&quot;muslim20.csv&quot;)
+islam_2020 &lt;- read.csv2(text = m20, 
+                        sep = &quot;,&quot;, 
+                        header = FALSE,
+                        skip = 14,
+                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                        nrows = length(m20) - 17)
 
-ggplot(d,aes(x=longitude,y=latitude))+
-  geom_polygon(aes(x=long,y=lat,group=group),data=map)+
-  geom_point(col=&quot;red&quot;)+
-  coord_equal()</code></pre>
-<div class="figure">
-<img src="index_files/figure-html/unnamed-chunk-4-1.png" alt="Map illustrating the known occurrence locations" width="576" />
-<p class="caption">
-Map illustrating the known occurrence locations
-</p>
-</div>
+## download the world Islam population data for 2030
+download.file(&quot;http://globalreligiousfutures.org/csv/21688&quot;, &quot;muslim30.csv&quot;)
+m30 &lt;- readLines(&quot;muslim30.csv&quot;)
+islam_2030 &lt;- read.csv2(text = m30, 
+                        sep = &quot;,&quot;, 
+                        header = FALSE,
+                        skip = 11,
+                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                        nrows = length(m30) - 14)
+
+## download the world Islam population data for 2040
+download.file(&quot;http://globalreligiousfutures.org/csv/21686&quot;, &quot;muslim40.csv&quot;)
+m40 &lt;- readLines(&quot;muslim40.csv&quot;)
+islam_2040 &lt;- read.csv2(text = m40, 
+                       sep = &quot;,&quot;, 
+                       header = FALSE,
+                       skip = 14,
+                       col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                       nrows = length(m40) - 17)
+
+## download the world Islam population data for 2050
+download.file(&quot;http://globalreligiousfutures.org/csv/21662&quot;, &quot;muslim50.csv&quot;)
+m50 &lt;- readLines(&quot;muslim50.csv&quot;)
+islam_2050 &lt;- read.csv2(text = m50, 
+                        sep = &quot;,&quot;, 
+                        header = FALSE,
+                        skip = 3,
+                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                        nrows = length(m50) - 6)</code></pre>
+<p>Download Christianity Population data, 2010 - 2050</p>
+<pre class="r"><code>## download the world Christianity population data for 2010
+download.file(&quot;http://globalreligiousfutures.org/csv/23086&quot;, &quot;crs10.csv&quot;)
+c10 &lt;- readLines(&quot;crs10.csv&quot;)
+chris_2010 &lt;- read.csv2(text = c10, 
+                       sep = &quot;,&quot;, 
+                       header = FALSE,
+                       skip = 14,
+                       col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                       nrows = length(c10))
+
+## download the world Christianity population data for 2020
+download.file(&quot;http://globalreligiousfutures.org/csv/23071&quot;, &quot;crs20.csv&quot;)
+c20 &lt;- readLines(&quot;crs20.csv&quot;)
+chris_2020 &lt;- read.csv2(text = c20, 
+                        sep = &quot;,&quot;, 
+                        header = FALSE,
+                        skip = 11,
+                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                        nrows = length(c20) - 14)
+
+## download the world Christianity population data for 2030
+download.file(&quot;http://globalreligiousfutures.org/csv/23072&quot;, &quot;crs30.csv&quot;)
+c30 &lt;- readLines(&quot;crs30.csv&quot;)
+chris_2030 &lt;- read.csv2(text = c30, 
+                        sep = &quot;,&quot;, 
+                        header = FALSE,
+                        skip = 11,
+                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                        nrows = length(c30) - 14)
+
+## download the world Christianity population data for 2040
+download.file(&quot;http://globalreligiousfutures.org/csv/23073&quot;, &quot;crs40.csv&quot;)
+c40 &lt;- readLines(&quot;crs40.csv&quot;)
+chris_2040 &lt;- read.csv2(text = c40, 
+                        sep = &quot;,&quot;, 
+                        header = FALSE,
+                        skip = 11,
+                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                        nrows = length(c40) - 14)
+
+## download the world Christianity population data for 2050
+download.file(&quot;http://globalreligiousfutures.org/csv/23074&quot;, &quot;crs50.csv&quot;)
+c50 &lt;- readLines(&quot;crs50.csv&quot;)
+chris_2050 &lt;- read.csv2(text = c50, 
+                        sep = &quot;,&quot;, 
+                        header = FALSE,
+                        skip = 11,
+                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                        nrows = length(c50) - 14)</code></pre>
+<p>Download Buddahism Population data, 2010 - 2050</p>
+<pre class="r"><code>## download the world Buddahism population data for 2010
+download.file(&quot;http://globalreligiousfutures.org/csv/22196&quot;, &quot;buda10.csv&quot;)
+b10 &lt;- readLines(&quot;buda10.csv&quot;)
+buddha_2010 &lt;- read.csv2(text = b10, 
+                        sep = &quot;,&quot;, 
+                        header = FALSE,
+                        skip = 11,
+                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                        nrows = length(b10) - 16)
+
+## download the world Buddahism population data for 2020
+download.file(&quot;http://globalreligiousfutures.org/csv/22885&quot;, &quot;buda20.csv&quot;)
+b20 &lt;- readLines(&quot;buda20.csv&quot;)
+buddha_2020 &lt;- read.csv2(text = b20, 
+                         sep = &quot;,&quot;, 
+                         header = FALSE,
+                         skip = 11,
+                         col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                         nrows = length(b20) - 14)
+
+## download the world Buddahism population data for 2030
+download.file(&quot;http://globalreligiousfutures.org/csv/23075&quot;, &quot;buda30.csv&quot;)
+b30 &lt;- readLines(&quot;buda30.csv&quot;)
+buddha_2030 &lt;- read.csv2(text = b30, 
+                         sep = &quot;,&quot;, 
+                         header = FALSE,
+                         skip = 11,
+                         col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                         nrows = length(b30) - 16)
+
+## download the world Buddahism population data for 2040
+download.file(&quot;http://globalreligiousfutures.org/csv/23076&quot;, &quot;buda40.csv&quot;)
+b40 &lt;- readLines(&quot;buda40.csv&quot;)
+buddha_2040 &lt;- read.csv2(text = b40, 
+                         sep = &quot;,&quot;, 
+                         header = FALSE,
+                         skip = 11,
+                         col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                         nrows = length(b40) - 14)
+
+## download the world Buddahism population data for 2050
+download.file(&quot;http://globalreligiousfutures.org/csv/23077&quot;, &quot;buda50.csv&quot;)
+b50 &lt;- readLines(&quot;buda50.csv&quot;)
+buddha_2050 &lt;- read.csv2(text = b50, 
+                         sep = &quot;,&quot;, 
+                         header = FALSE,
+                         skip = 11,
+                         col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                         nrows = length(b50) - 14)</code></pre>
+<p>Download Religious Unaffiliated Population data, 2010 - 2050</p>
+<pre class="r"><code>## download the world religious unaffiliated population data for 2010
+
+
+## download the world religious unaffiliated population data for 2020
+download.file(&quot;http://globalreligiousfutures.org/csv/23079&quot;, &quot;unaf20.csv&quot;)
+u20 &lt;- readLines(&quot;unaf20.csv&quot;)
+unaffiliated_2020 &lt;- read.csv2(text = u20, 
+                               sep = &quot;,&quot;, 
+                               header = FALSE,
+                               skip = 11,
+                               col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                               nrows = length(u20) - 14)
+
+## download the world religious unaffiliated population data for 2030
+download.file(&quot;http://globalreligiousfutures.org/csv/23080&quot;, &quot;unaf30.csv&quot;)
+u30 &lt;- readLines(&quot;unaf30.csv&quot;)
+unaffiliated_2030 &lt;- read.csv2(text = u30, 
+                               sep = &quot;,&quot;, 
+                               header = FALSE,
+                               skip = 11,
+                               col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                               nrows = length(u30) - 14)
+
+## download the world religious unaffiliated population data for 2040
+download.file(&quot;http://globalreligiousfutures.org/csv/23081&quot;, &quot;unaf40.csv&quot;)
+u40 &lt;- readLines(&quot;unaf40.csv&quot;)
+unaffiliated_2040 &lt;- read.csv2(text = u40, 
+                               sep = &quot;,&quot;, 
+                               header = FALSE,
+                               skip = 11,
+                               col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                               nrows = length(u40) - 14)
+
+## download the world religious unaffiliated population data for 2050
+download.file(&quot;http://globalreligiousfutures.org/csv/23082&quot;, &quot;unaf50.csv&quot;)
+u50 &lt;- readLines(&quot;unaf50.csv&quot;)
+unaffiliated_2050 &lt;- read.csv2(text = u50, 
+                               sep = &quot;,&quot;, 
+                               header = FALSE,
+                               skip = 11,
+                               col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
+                               nrows = length(u50) - 14)</code></pre>
+<p>Plotting the 2010 Islam Population Map</p>
+<pre class="r"><code>#Loading the Color Palette for Map
+color1 &lt;- brewer.pal(5,&quot;YlOrRd&quot;)
+
+# Plotting the Country Heat Map of Muslim Population in 2010
+Islam_2010_iso &lt;- as.character(islam_2010$Country_Code)
+Islam_2010_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2010$Religion_Population)))
+islam_2010_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2010_iso, 
+                                                  value = Islam_2010_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 11 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>map1 &lt;- mapCountryData(islam_2010_plot, 
+               nameColumnToPlot = &quot;value&quot;, 
+               mapTitle = &quot;2010 World Muslim Population&quot;, 
+               catMethod = &quot;logFixedWidth&quot;,
+               colourPalette = color1,
+               addLegend = FALSE)
+#add legend 
+do.call(addMapLegend, c(map1,
+                        legendLabels=&quot;all&quot;,
+                        labelFontSize = 0.5,
+                        legendIntervals = &quot;page&quot;,
+                        digits = 4,
+                        sigFigs = 4
+                        ))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Plotting the 2050 Islam Population Map</p>
+<pre class="r"><code># Plotting the Country Heat Map of Muslim Population in 2050
+Islam_2050_iso &lt;- as.character(islam_2050$Country_Code)
+Islam_2050_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2050$Religion_Population)))
+islam_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2050_iso, 
+                                                  value = Islam_2050_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 21 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>map2 &lt;- mapCountryData(islam_2050_plot, 
+               nameColumnToPlot = &quot;value&quot;, 
+               mapTitle = &quot;2050 World Muslim Population&quot;, 
+               catMethod = &quot;logFixedWidth&quot;,
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>
-<p>Show tables, plots, etc. and describe them.</p>
-<pre class="r"><code>summary(d)</code></pre>
-<pre><code>## Warning in format.POSIXlt(as.POSIXlt(x), ...): unknown timezone &#39;default/
-## America/New_York&#39;</code></pre>
-<pre><code>##      name             longitude         latitude         prov          
-##  Length:100         Min.   :-93.30   Min.   :32.86   Length:100        
-##  Class :character   1st Qu.:-82.73   1st Qu.:39.40   Class :character  
-##  Mode  :character   Median :-76.81   Median :40.78   Mode  :character  
-##                     Mean   :-78.43   Mean   :40.54                     
-##                     3rd Qu.:-74.73   3rd Qu.:42.47                     
-##                     Max.   :-69.20   Max.   :45.77                     
-##       date                key           
-##  Min.   :2017-10-18   Length:100        
-##  1st Qu.:2017-10-18   Class :character  
-##  Median :2017-10-18   Mode  :character  
-##  Mean   :2017-10-18                     
-##  3rd Qu.:2017-10-18                     
-##  Max.   :2017-10-18</code></pre>
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
-<p>What have you learned? Are there any broader implications?</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
+<p>Saxe, L. and E. Tighe (2013). “Estimating and Understanding the Jewish Population in the United States: A Program of Research.” Contemporary Jewry 33(1): 43-62.</p>
 </div>
 
 <!-- give the footer some space -->
