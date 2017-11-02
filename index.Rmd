@@ -1,5 +1,5 @@
 ---
-title: "Evolution111 of Religious Population"
+title: "Evolution of Religious Population"
 author: Yifan Wang
 subtitle: Visualizing the Prediction of Major Religious Population Changing From 2010 to 2050
 ---
