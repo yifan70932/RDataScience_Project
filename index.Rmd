@@ -9,12 +9,12 @@ With the advancement in science and the spreading of secularism, the problem of 
 
 This project aims to provide a visualization of the changing in the religious and unreligious population to answer the following questions: 
 
-a)  Which religion would have the largest believer group in the coming decades and 
-b)  How would the skeptic or atheist population varies from now to the year 2050. 
+a)  **Which religion would have the largest believer group in the coming decades and** 
+b)  **How would the skeptic or atheist population varies from now to the year 2050.** 
 
-The hypothesis towards this research is that religious population for all the major religions will increase and the community of skeptics would shrink. With the data collected by the Global Religious Future project (http://globalreligiousfutures.org), the evolution, from the year 2010 to 2050, in the population of three major religions (i.e. Christianism, Islam and Buddhism) around the world is processed and displayed. The religious unaffiliated population, in addition, is visualized as well. In this project, a series of static and dynamic maps and images (e.g. animation world map, bubble diagram) were produced to show the trend of the evolution of the religious population. With the result from the data processing, Islam would experience the most obvious increasing in the number of believers from now to the year 2050. Buddhism and Christianity communities generally remain static in the coming decades. At the same time, the coming decades will witness the decreasing of the religious unaffiliated population.
+The hypothesis towards this research is that religious population for all the major religions will increase and the community of skeptics would shrink. With the data collected by the Global Religious Future project (http://globalreligiousfutures.org), the evolution, from the year 2010 to 2050, in the population of three major religions (i.e. Christianism, Islam and Buddhism) around the world is processed and displayed. The religious unaffiliated population, in addition, is visualized as well. In this project, a series of static and dynamic maps and images (e.g. animation world map, bubble diagram) were produced to show the trend of the evolution of the religious population. With the result from the data processing, Islam would experience the most obvious increasing in the number of believers from now to the year 2050. While Buddhism and Christianity communities generally remain static in the coming decades. At the same time, the coming decades will witness the decreasing of the religious unaffiliated population.
   
-> <span style="color:blue">Religion, it was thought, would thin out from its more robust, supernaturalist forms or die out altogether. But the theory that technological advancement brings inevitable secularization is now being scrapped or radically rethought.</span>  ~ Timothy Keller, < the Reason for God > 
+> <span style="color:blue">"Religion, it was thought, would thin out from its more robust, supernaturalist forms or die out altogether. But the theory that technological advancement brings inevitable secularization is now being scrapped or radically rethought."</span>                  ~ Timothy Keller, < the Reason for God > 
 
 # Materials and Methods
 
@@ -476,6 +476,7 @@ do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendInterv
 
 
 # References
+
 Saxe, L. and E. Tighe (2013). "Estimating and Understanding the Jewish Population in the United States: A Program of Research." Contemporary Jewry 33(1): 43-62.
 
 Keller, T. J. (2008). The reason for God: Belief in an age of skepticism. New York: Dutton.
