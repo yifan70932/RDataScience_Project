@@ -319,14 +319,10 @@ div.tocify {
 <div id="materials-and-methods" class="section level1">
 <h1>Materials and Methods</h1>
 <p>Loading required packages (you may need to install some packages):</p>
-<pre class="r"><code>#install.packages(&quot;data.table&quot;)
-#install.packages(&quot;rworldmap&quot;)
-#install.packages(&quot;dplyr&quot;)
-#install.packages(&quot;tidyr&quot;)
-#install.packages(&quot;ggplot2&quot;)
-#install.packages(&quot;maps&quot;)
-#install.packages(&quot;RColorBrewer&quot;)
-#install.packages(&quot;spocc&quot;)
+<pre class="r"><code># install.packages(&#39;data.table&#39;) install.packages(&#39;rworldmap&#39;)
+# install.packages(&#39;dplyr&#39;) install.packages(&#39;tidyr&#39;)
+# install.packages(&#39;ggplot2&#39;) install.packages(&#39;maps&#39;)
+# install.packages(&#39;RColorBrewer&#39;) install.packages(&#39;spocc&#39;)
 library(dplyr)
 library(tidyr)
 library(data.table)
@@ -336,7 +332,7 @@ library(maps)
 library(spocc)
 library(maptools)
 library(RColorBrewer)
-knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling</code></pre>
+knitr::opts_chunk$set(cache = TRUE)  # cache the results for quick compiling</code></pre>
 <p>Using download.file() function to download the surveyed and estimated population for the believer community of</p>
 <ul>
 <li>Islam</li>
@@ -353,52 +349,32 @@ knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling</code
 <pre class="r"><code>## download the world Islam population data for 2010
 download.file(&quot;http://globalreligiousfutures.org/csv/22411&quot;, &quot;muslim10.csv&quot;)
 m10 &lt;- readLines(&quot;muslim10.csv&quot;)
-islam_2010 &lt;- read.csv2(text = m10, 
-                        sep = &quot;,&quot;, 
-                        header = FALSE,
-                        skip = 11,
-                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
-                        nrows = length(m10) - 16)
+islam_2010 &lt;- read.csv2(text = m10, sep = &quot;,&quot;, header = FALSE, skip = 11, col.names = c(&quot;Country_Code&quot;, 
+    &quot;Country&quot;, &quot;Religion_Population&quot;), nrows = length(m10) - 16)
 
 ## download the world Islam population data for 2020
 download.file(&quot;http://globalreligiousfutures.org/csv/21689&quot;, &quot;muslim20.csv&quot;)
 m20 &lt;- readLines(&quot;muslim20.csv&quot;)
-islam_2020 &lt;- read.csv2(text = m20, 
-                        sep = &quot;,&quot;, 
-                        header = FALSE,
-                        skip = 14,
-                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
-                        nrows = length(m20) - 17)
+islam_2020 &lt;- read.csv2(text = m20, sep = &quot;,&quot;, header = FALSE, skip = 14, col.names = c(&quot;Country_Code&quot;, 
+    &quot;Country&quot;, &quot;Religion_Population&quot;), nrows = length(m20) - 17)
 
 ## download the world Islam population data for 2030
 download.file(&quot;http://globalreligiousfutures.org/csv/21688&quot;, &quot;muslim30.csv&quot;)
 m30 &lt;- readLines(&quot;muslim30.csv&quot;)
-islam_2030 &lt;- read.csv2(text = m30, 
-                        sep = &quot;,&quot;, 
-                        header = FALSE,
-                        skip = 11,
-                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
-                        nrows = length(m30) - 14)
+islam_2030 &lt;- read.csv2(text = m30, sep = &quot;,&quot;, header = FALSE, skip = 11, col.names = c(&quot;Country_Code&quot;, 
+    &quot;Country&quot;, &quot;Religion_Population&quot;), nrows = length(m30) - 14)
 
 ## download the world Islam population data for 2040
 download.file(&quot;http://globalreligiousfutures.org/csv/21686&quot;, &quot;muslim40.csv&quot;)
 m40 &lt;- readLines(&quot;muslim40.csv&quot;)
-islam_2040 &lt;- read.csv2(text = m40, 
-                       sep = &quot;,&quot;, 
-                       header = FALSE,
-                       skip = 14,
-                       col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
-                       nrows = length(m40) - 17)
+islam_2040 &lt;- read.csv2(text = m40, sep = &quot;,&quot;, header = FALSE, skip = 14, col.names = c(&quot;Country_Code&quot;, 
+    &quot;Country&quot;, &quot;Religion_Population&quot;), nrows = length(m40) - 17)
 
 ## download the world Islam population data for 2050
 download.file(&quot;http://globalreligiousfutures.org/csv/21662&quot;, &quot;muslim50.csv&quot;)
 m50 &lt;- readLines(&quot;muslim50.csv&quot;)
-islam_2050 &lt;- read.csv2(text = m50, 
-                        sep = &quot;,&quot;, 
-                        header = FALSE,
-                        skip = 3,
-                        col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
-                        nrows = length(m50) - 6)</code></pre>
+islam_2050 &lt;- read.csv2(text = m50, sep = &quot;,&quot;, header = FALSE, skip = 3, col.names = c(&quot;Country_Code&quot;, 
+    &quot;Country&quot;, &quot;Religion_Population&quot;), nrows = length(m50) - 6)</code></pre>
 <p>Download Christianity Population data, 2010 - 2050</p>
 <pre class="r"><code>## download the world Christianity population data for 2010
 download.file(&quot;http://globalreligiousfutures.org/csv/23086&quot;, &quot;crs10.csv&quot;)

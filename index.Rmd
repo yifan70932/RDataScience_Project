@@ -19,15 +19,7 @@ The hypothesis towards this research is that religious population for all the ma
 # Materials and Methods
 
 Loading required packages (you may need to install some packages):
-```{r, message=FALSE, warning=FALSE}
-#install.packages("data.table")
-#install.packages("rworldmap")
-#install.packages("dplyr")
-#install.packages("tidyr")
-#install.packages("ggplot2")
-#install.packages("maps")
-#install.packages("RColorBrewer")
-#install.packages("spocc")
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 library(dplyr)
 library(tidyr)
 library(data.table)
@@ -37,7 +29,10 @@ library(maps)
 library(spocc)
 library(maptools)
 library(RColorBrewer)
-knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling
+library(jsonlite)
+library(geojsonio)
+library(leaflet)
+knitr::opts_chunk$set(cache=TRUE)
 ```
 
 
@@ -54,9 +49,10 @@ The dataset downloaded is the survey result in 234 countries and predictions mad
 
 The code following the download command read the data from the downloaded CSV file and create a data frame named as "Religion_Year" (e.g. Islam_2010) for each single dataset. The "skip" and "nrow" factor in the read.csv2() function serve to skip the description and space lines in the original file.
 
-###Data Downloading
-Download Islam Population data, 2010 - 2050
-```{r, warning=FALSE} 
+##Data Retriving and Simple Visualization
+
+###Islam Population, 2010 - 2050
+```{r, warning=FALSE,tidy=TRUE} 
 ## download the world Islam population data for 2010
 download.file("http://globalreligiousfutures.org/csv/22411", "muslim10.csv")
 m10 <- readLines("muslim10.csv")
@@ -108,8 +104,57 @@ islam_2050 <- read.csv2(text = m50,
                         nrows = length(m50) - 6)
 
 ```
+Plotting the 2010 Islam Population Map
+```{r, echo=TRUE, fig.cap="Country Heat Map of Muslim Population in 2010", message=FALSE, warning=FALSE}
+#Loading the Color Palette for Map
+color1 <- brewer.pal(5,"YlOrRd")
 
-Download Christianity Population data, 2010 - 2050
+# Plotting the Country Heat Map of Muslim Population in 2010
+Islam_2010_iso <- as.character(islam_2010$Country_Code)
+Islam_2010_Population <- as.numeric(gsub(",","",as.character(islam_2010$Religion_Population)))
+islam_2010_plot <- joinCountryData2Map(data.frame(country_iso = Islam_2010_iso, 
+                                                  value = Islam_2010_Population), 
+                                       joinCode = "ISO2", 
+                                       nameJoinColumn = "country_iso")
+```
+```{r, message=FALSE, warning=FALSE}
+map1 <- mapCountryData(islam_2010_plot, 
+               nameColumnToPlot = "value", 
+               mapTitle = "2010 World Muslim Population", 
+               catMethod = "logFixedWidth",
+               colourPalette = color1,
+               addLegend = FALSE)
+#add legend 
+do.call(addMapLegend, c(map1,
+                        legendLabels="all",
+                        labelFontSize = 0.5,
+                        legendIntervals = "page",
+                        digits = 4,
+                        sigFigs = 4
+                        ))
+```
+Plotting the 2050 Islam Population Map
+```{r, fig.cap="Country Heat Map of Muslim Population in 2050", message=FALSE, warning=FALSE}
+# Plotting the Country Heat Map of Muslim Population in 2050
+Islam_2050_iso <- as.character(islam_2050$Country_Code)
+Islam_2050_Population <- as.numeric(gsub(",","",as.character(islam_2050$Religion_Population)))
+islam_2050_plot <- joinCountryData2Map(data.frame(country_iso = Islam_2050_iso, 
+                                                  value = Islam_2050_Population), 
+                                       joinCode = "ISO2", 
+                                       nameJoinColumn = "country_iso")
+```
+```{r, echo=TRUE, warning=FALSE}
+map2 <- mapCountryData(islam_2050_plot, 
+               nameColumnToPlot = "value", 
+               mapTitle = "2050 World Muslim Population", 
+               catMethod = "logFixedWidth",
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
+```
+
+
+###Christianity Population, 2010 - 2050
 ```{r, warning = FALSE}
 ## download the world Christianity population data for 2010
 download.file("http://globalreligiousfutures.org/csv/23086", "crs10.csv")
@@ -161,8 +206,48 @@ chris_2050 <- read.csv2(text = c50,
                         col.names = c("Country_Code","Country","Religion_Population"),
                         nrows = length(c50) - 14)
 ```
+Plotting the 2010 Christian Population Map
+```{r, fig.cap="Country Heat Map of Christian Population in 2010", message=FALSE, warning=FALSE}
+# Plotting the Country Heat Map of Christian Population in 2010
+chris_2010_iso <- as.character(chris_2010$Country_Code)
+chris_2010_Population <- as.numeric(gsub(",","",as.character(chris_2010$Religion_Population)))
+chris_2010_plot <- joinCountryData2Map(data.frame(country_iso = chris_2010_iso, 
+                                                  value = chris_2010_Population), 
+                                       joinCode = "ISO2", 
+                                       nameJoinColumn = "country_iso")
+```
+```{r, echo=TRUE, warning=FALSE}
+map2 <- mapCountryData(chris_2010_plot, 
+               nameColumnToPlot = "value", 
+               mapTitle = "2010 World Christian Population", 
+               catMethod = "logFixedWidth",
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
+```
 
-Download Buddahism Population data, 2010 - 2050
+Plotting the 2050 Christian Population Map
+```{r, fig.cap="Country Heat Map of Christian Population in 2050", message=FALSE, warning=FALSE}
+# Plotting the Country Heat Map of Christian Population in 2050
+chris_2050_iso <- as.character(chris_2050$Country_Code)
+chris_2050_Population <- as.numeric(gsub(",","",as.character(chris_2050$Religion_Population)))
+chris_2050_plot <- joinCountryData2Map(data.frame(country_iso = chris_2050_iso, 
+                                                  value = chris_2050_Population), 
+                                       joinCode = "ISO2", 
+                                       nameJoinColumn = "country_iso")
+```
+```{r, echo=TRUE, warning=FALSE}
+map2 <- mapCountryData(chris_2050_plot, 
+               nameColumnToPlot = "value", 
+               mapTitle = "2050 World Christian Population", 
+               catMethod = "logFixedWidth",
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
+```
+
+
+###Buddahism Population, 2010 - 2050
 ```{r, warning = FALSE}
 ## download the world Buddahism population data for 2010
 download.file("http://globalreligiousfutures.org/csv/22196", "buda10.csv")
@@ -215,8 +300,49 @@ buddha_2050 <- read.csv2(text = b50,
                          nrows = length(b50) - 14)
 
 ```
+Plotting the 2010 Buddhism Population Map
+```{r, fig.cap="Country Heat Map of Buddhism Population in 2010", message=FALSE, warning=FALSE}
+# Plotting the Country Heat Map of Buddhism Population in 2010
+buddha_2010_iso <- as.character(buddha_2010$Country_Code)
+buddha_2010_Population <- as.numeric(gsub(",","",as.character(buddha_2010$Religion_Population)))
+buddha_2010_plot <- joinCountryData2Map(data.frame(country_iso = buddha_2010_iso, 
+                                                  value = buddha_2010_Population), 
+                                       joinCode = "ISO2", 
+                                       nameJoinColumn = "country_iso")
+```
 
-Download Religious Unaffiliated Population data, 2010 - 2050
+```{r, echo=TRUE, warning=FALSE}
+map2 <- mapCountryData(buddha_2010_plot, 
+               nameColumnToPlot = "value", 
+               mapTitle = "2010 World Buddhism Population", 
+               catMethod = "logFixedWidth",
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
+```
+
+Plotting the 2050 Buddhism Population Map
+```{r, fig.cap="Country Heat Map of Buddhism Population in 2050", message=FALSE, warning=FALSE}
+# Plotting the Country Heat Map of Buddhism Population in 2050
+buddha_2050_iso <- as.character(buddha_2050$Country_Code)
+buddha_2050_Population <- as.numeric(gsub(",","",as.character(buddha_2050$Religion_Population)))
+buddha_2050_plot <- joinCountryData2Map(data.frame(country_iso = buddha_2050_iso, 
+                                                  value = buddha_2050_Population), 
+                                       joinCode = "ISO2", 
+                                       nameJoinColumn = "country_iso")
+```
+
+```{r, echo=TRUE, warning=FALSE}
+map2 <- mapCountryData(buddha_2050_plot, 
+               nameColumnToPlot = "value", 
+               mapTitle = "2050 World Buddhism Population", 
+               catMethod = "logFixedWidth",
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
+```
+
+###Religious Unaffiliated Population, 2010 - 2050
 ```{r, warning = FALSE}
 ## download the world religious unaffiliated population data for 2010
 download.file("http://globalreligiousfutures.org/csv/23117", "unaf10.csv")
@@ -268,161 +394,6 @@ unaffiliated_2050 <- read.csv2(text = u50,
                                col.names = c("Country_Code","Country","Religion_Population"),
                                nrows = length(u50) - 14)
 ```
-
-
-###Simple Visualization of the Raw Data
-
-
-####Islam 2050 VS. 2010
-Plotting the 2010 Islam Population Map
-```{r, echo=TRUE, fig.cap="Country Heat Map of Muslim Population in 2010", message=FALSE, warning=FALSE}
-#Loading the Color Palette for Map
-color1 <- brewer.pal(5,"YlOrRd")
-
-# Plotting the Country Heat Map of Muslim Population in 2010
-Islam_2010_iso <- as.character(islam_2010$Country_Code)
-Islam_2010_Population <- as.numeric(gsub(",","",as.character(islam_2010$Religion_Population)))
-islam_2010_plot <- joinCountryData2Map(data.frame(country_iso = Islam_2010_iso, 
-                                                  value = Islam_2010_Population), 
-                                       joinCode = "ISO2", 
-                                       nameJoinColumn = "country_iso")
-```
-
-```{r, message=FALSE, warning=FALSE}
-map1 <- mapCountryData(islam_2010_plot, 
-               nameColumnToPlot = "value", 
-               mapTitle = "2010 World Muslim Population", 
-               catMethod = "logFixedWidth",
-               colourPalette = color1,
-               addLegend = FALSE)
-#add legend 
-do.call(addMapLegend, c(map1,
-                        legendLabels="all",
-                        labelFontSize = 0.5,
-                        legendIntervals = "page",
-                        digits = 4,
-                        sigFigs = 4
-                        ))
-```
-
-Plotting the 2050 Islam Population Map
-```{r, fig.cap="Country Heat Map of Muslim Population in 2050", message=FALSE, warning=FALSE}
-# Plotting the Country Heat Map of Muslim Population in 2050
-Islam_2050_iso <- as.character(islam_2050$Country_Code)
-Islam_2050_Population <- as.numeric(gsub(",","",as.character(islam_2050$Religion_Population)))
-islam_2050_plot <- joinCountryData2Map(data.frame(country_iso = Islam_2050_iso, 
-                                                  value = Islam_2050_Population), 
-                                       joinCode = "ISO2", 
-                                       nameJoinColumn = "country_iso")
-```
-
-
-```{r, echo=TRUE, warning=FALSE}
-map2 <- mapCountryData(islam_2050_plot, 
-               nameColumnToPlot = "value", 
-               mapTitle = "2050 World Muslim Population", 
-               catMethod = "logFixedWidth",
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
-```
-
-
-####Christianity 2050 VS. 2010
-
-Plotting the 2010 Christian Population Map
-```{r, fig.cap="Country Heat Map of Christian Population in 2010", message=FALSE, warning=FALSE}
-# Plotting the Country Heat Map of Christian Population in 2010
-chris_2010_iso <- as.character(chris_2010$Country_Code)
-chris_2010_Population <- as.numeric(gsub(",","",as.character(chris_2010$Religion_Population)))
-chris_2010_plot <- joinCountryData2Map(data.frame(country_iso = chris_2010_iso, 
-                                                  value = chris_2010_Population), 
-                                       joinCode = "ISO2", 
-                                       nameJoinColumn = "country_iso")
-```
-
-```{r, echo=TRUE, warning=FALSE}
-map2 <- mapCountryData(chris_2010_plot, 
-               nameColumnToPlot = "value", 
-               mapTitle = "2010 World Christian Population", 
-               catMethod = "logFixedWidth",
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
-```
-
-Plotting the 2050 Christian Population Map
-```{r, fig.cap="Country Heat Map of Christian Population in 2050", message=FALSE, warning=FALSE}
-# Plotting the Country Heat Map of Christian Population in 2050
-chris_2050_iso <- as.character(chris_2050$Country_Code)
-chris_2050_Population <- as.numeric(gsub(",","",as.character(chris_2050$Religion_Population)))
-chris_2050_plot <- joinCountryData2Map(data.frame(country_iso = chris_2050_iso, 
-                                                  value = chris_2050_Population), 
-                                       joinCode = "ISO2", 
-                                       nameJoinColumn = "country_iso")
-```
-
-```{r, echo=TRUE, warning=FALSE}
-map2 <- mapCountryData(chris_2050_plot, 
-               nameColumnToPlot = "value", 
-               mapTitle = "2050 World Christian Population", 
-               catMethod = "logFixedWidth",
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
-```
-
-
-####Buddhism 2050 VS. 2010
-
-
-Plotting the 2010 Buddhism Population Map
-```{r, fig.cap="Country Heat Map of Buddhism Population in 2010", message=FALSE, warning=FALSE}
-# Plotting the Country Heat Map of Buddhism Population in 2010
-buddha_2010_iso <- as.character(buddha_2010$Country_Code)
-buddha_2010_Population <- as.numeric(gsub(",","",as.character(buddha_2010$Religion_Population)))
-buddha_2010_plot <- joinCountryData2Map(data.frame(country_iso = buddha_2010_iso, 
-                                                  value = buddha_2010_Population), 
-                                       joinCode = "ISO2", 
-                                       nameJoinColumn = "country_iso")
-```
-
-```{r, echo=TRUE, warning=FALSE}
-map2 <- mapCountryData(buddha_2010_plot, 
-               nameColumnToPlot = "value", 
-               mapTitle = "2010 World Buddhism Population", 
-               catMethod = "logFixedWidth",
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
-```
-
-
-Plotting the 2050 Buddhism Population Map
-```{r, fig.cap="Country Heat Map of Buddhism Population in 2050", message=FALSE, warning=FALSE}
-# Plotting the Country Heat Map of Buddhism Population in 2050
-buddha_2050_iso <- as.character(buddha_2050$Country_Code)
-buddha_2050_Population <- as.numeric(gsub(",","",as.character(buddha_2050$Religion_Population)))
-buddha_2050_plot <- joinCountryData2Map(data.frame(country_iso = buddha_2050_iso, 
-                                                  value = buddha_2050_Population), 
-                                       joinCode = "ISO2", 
-                                       nameJoinColumn = "country_iso")
-```
-
-```{r, echo=TRUE, warning=FALSE}
-map2 <- mapCountryData(buddha_2050_plot, 
-               nameColumnToPlot = "value", 
-               mapTitle = "2050 World Buddhism Population", 
-               catMethod = "logFixedWidth",
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
-```
-
-
-####Religious Unaffiliated 2050 VS. 2010
-
-
 Plotting the 2010 Religious Unaffiiated Population Map
 ```{r, fig.cap="Country Heat Map of Religious Unaffiiated Population in 2010", message=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Religious Unaffiiated Population in 2010
@@ -467,10 +438,43 @@ do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendInterv
 ```
 
 
+
+
+##Bubble Plot for the 2010 Muslim Population
+```{r, message=FALSE, warning=FALSE}
+mapBubbles(islam_2010_plot, 
+           nameZSize = 'value', 
+           catMethod = "logFixedWidth",
+           numCats = 5,
+           main = 'Muslim Population 2010',
+           landCol = 'wheat',
+           oceanCol = 'light blue')
+```
+
+```{r}
+barplotCountryData(islam_2010_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   scaleSameInPanels = TRUE
+                   )
+```
+
+```{r, message=FALSE, warning=FALSE}
+#jsonlite package plotting
+states <- geojsonio::geojson_read("json/us-states.geojson", what = "sp")
+class(states)
+```
+
+
+
 # Results
 ```{r}
 
 ```
+
+
+
+
 
 # Conclusions
 
