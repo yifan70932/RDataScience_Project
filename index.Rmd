@@ -32,6 +32,7 @@ library(RColorBrewer)
 library(jsonlite)
 library(geojsonio)
 library(leaflet)
+library(mapplots)
 knitr::opts_chunk$set(cache=TRUE)
 ```
 
@@ -49,7 +50,7 @@ The dataset downloaded is the survey result in 234 countries and predictions mad
 
 The code following the download command read the data from the downloaded CSV file and create a data frame named as "Religion_Year" (e.g. Islam_2010) for each single dataset. The "skip" and "nrow" factor in the read.csv2() function serve to skip the description and space lines in the original file.
 
-##Data Retriving and Simple Visualization
+##Data Retriving and Chloropleth Visualization
 
 ###Islam Population, 2010 - 2050
 ```{r, warning=FALSE,tidy=TRUE} 
@@ -133,6 +134,7 @@ do.call(addMapLegend, c(map1,
                         sigFigs = 4
                         ))
 ```
+
 Plotting the 2050 Islam Population Map
 ```{r, fig.cap="Country Heat Map of Muslim Population in 2050", message=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Muslim Population in 2050
@@ -451,12 +453,28 @@ mapBubbles(islam_2010_plot,
            oceanCol = 'light blue')
 ```
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 barplotCountryData(islam_2010_plot,
                    nameColumnToPlot = 'value',
                    nameCountryColumn = 'NAME',
                    scaleSameInPanels = TRUE
                    )
+
+#Pie chart, for each country, map the population of different religions in a pie chart
+
+#2010
+pie_2010_plot <- islam_2010_plot
+pie_2010_plot$islam <- islam_2010_plot$value
+pie_2010_plot$christian <- chris_2010_plot$value
+pie_2010_plot$buddha <- buddha_2010_plot$value
+pie_2010_plot$Unaffiliated <- unaffiliated_2010_plot$value
+
+mapPies(pie_2010_plot, 
+        nameZs = c('islam','christian','buddha','Unaffiliated'),
+        zColours = c('green','purple','red','blue'),
+        oceanCol = 'light blue',
+        landCol = 'wheat',
+        symbolSize = 2.5)
 ```
 
 

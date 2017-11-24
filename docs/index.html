@@ -331,6 +331,7 @@ library(RColorBrewer)
 library(jsonlite)
 library(geojsonio)
 library(leaflet)
+library(mapplots)
 knitr::opts_chunk$set(cache = TRUE)</code></pre>
 <p>Using download.file() function to download the surveyed and estimated population for the believer community of</p>
 <ul>
@@ -342,8 +343,8 @@ knitr::opts_chunk$set(cache = TRUE)</code></pre>
 <p>from the <a href="http://globalreligiousfutures.org">The Global Religious Future Project</a>. You can visit the <a href="http://globalreligiousfutures.org/explorer#/?subtopic=15&amp;chartType=map&amp;year=2010&amp;data_type=number&amp;religious_affiliation=all&amp;destination=to&amp;countries=Worldwide&amp;age_group=all&amp;gender=all&amp;pdfMode=false">Data Explorer</a> for data about other religions.</p>
 <p>The dataset downloaded is the survey result in 234 countries and predictions made upon them (check <a href="http://globalreligiousfutures.org/explorer/about-grf-data" class="uri">http://globalreligiousfutures.org/explorer/about-grf-data</a> for more information). For each of the three representative religions, the number of believers in the year 2010, 2020, 2030, 2040 and 2050 is separately stored and downloaded in different datasets. The three religions mentioned above were selected to show the general trend of the variation of religious population since that comparing to other religions that have large believer community, these three religions were more spread over the world so that could better represent the religious population community despite factors like politic or local culture.</p>
 <p>The code following the download command read the data from the downloaded CSV file and create a data frame named as “Religion_Year” (e.g. Islam_2010) for each single dataset. The “skip” and “nrow” factor in the read.csv2() function serve to skip the description and space lines in the original file.</p>
-<div id="data-retriving-and-simple-visualization" class="section level2">
-<h2>Data Retriving and Simple Visualization</h2>
+<div id="data-retriving-and-chloropleth-visualization" class="section level2">
+<h2>Data Retriving and Chloropleth Visualization</h2>
 <div id="islam-population-2010---2050" class="section level3">
 <h3>Islam Population, 2010 - 2050</h3>
 <pre class="r"><code>## download the world Islam population data for 2010
@@ -403,7 +404,8 @@ do.call(addMapLegend, c(map1,
                         digits = 4,
                         sigFigs = 4
                         ))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="672" /> Plotting the 2050 Islam Population Map</p>
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Plotting the 2050 Islam Population Map</p>
 <pre class="r"><code># Plotting the Country Heat Map of Muslim Population in 2050
 Islam_2050_iso &lt;- as.character(islam_2050$Country_Code)
 Islam_2050_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2050$Religion_Population)))
@@ -710,6 +712,26 @@ do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,le
                    scaleSameInPanels = TRUE
                    )</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<pre class="r"><code>#Pie chart, for each country, map the population of different religions in a pie chart
+
+#2010
+pie_2010_plot &lt;- islam_2010_plot
+pie_2010_plot$islam &lt;- islam_2010_plot$value
+pie_2010_plot$christian &lt;- chris_2010_plot$value
+pie_2010_plot$buddha &lt;- buddha_2010_plot$value
+pie_2010_plot$Unaffiliated &lt;- unaffiliated_2010_plot$value
+
+mapPies(pie_2010_plot, 
+        nameZs = c(&#39;islam&#39;,&#39;christian&#39;,&#39;buddha&#39;,&#39;Unaffiliated&#39;),
+        zColours = c(&#39;green&#39;,&#39;purple&#39;,&#39;red&#39;,&#39;blue&#39;),
+        oceanCol = &#39;light blue&#39;,
+        landCol = &#39;wheat&#39;,
+        symbolSize = 2.5)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-23-2.png" width="672" /></p>
+<pre><code>## symbolMaxSize= 7.2  maxSumValues= 1037890000  symbolScale= 0.0002234894 
+## List of 2
+##  $ x: num [1:100] -140 -140 -141 -141 -141 ...
+##  $ y: num [1:100] 67.5 68.6 69.8 70.9 72 ...</code></pre>
 </div>
 </div>
 <div id="results" class="section level1">
