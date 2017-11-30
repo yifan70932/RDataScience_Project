@@ -24,8 +24,9 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -35,10 +36,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -163,6 +166,14 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
 
@@ -294,6 +305,14 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Evolution of Religious Population</h1>
@@ -318,7 +337,16 @@ div.tocify {
 </div>
 <div id="materials-and-methods" class="section level1">
 <h1>Materials and Methods</h1>
-<p>Loading required packages (you may need to install some packages):</p>
+<p>Using download.file() function to download the surveyed and estimated population for the believer community of</p>
+<ul>
+<li>Islam</li>
+<li>Christianity</li>
+<li>Buddhism</li>
+<li>Religious Unaffiliated</li>
+</ul>
+<p>from the <a href="http://globalreligiousfutures.org">The Global Religious Future Project</a>. You can visit the <a href="http://globalreligiousfutures.org/explorer#/?subtopic=15&amp;chartType=map&amp;year=2010&amp;data_type=number&amp;religious_affiliation=all&amp;destination=to&amp;countries=Worldwide&amp;age_group=all&amp;gender=all&amp;pdfMode=false">Data Explorer</a> for data about other religions.</p>
+<div id="packages" class="section level2">
+<h2>Packages</h2>
 <pre class="r"><code>library(dplyr)
 library(tidyr)
 library(data.table)
@@ -333,20 +361,16 @@ library(geojsonio)
 library(leaflet)
 library(mapplots)
 knitr::opts_chunk$set(cache = TRUE)</code></pre>
-<p>Using download.file() function to download the surveyed and estimated population for the believer community of</p>
-<ul>
-<li>Islam</li>
-<li>Christianity</li>
-<li>Buddhism</li>
-<li>Religious Unaffiliated</li>
-</ul>
-<p>from the <a href="http://globalreligiousfutures.org">The Global Religious Future Project</a>. You can visit the <a href="http://globalreligiousfutures.org/explorer#/?subtopic=15&amp;chartType=map&amp;year=2010&amp;data_type=number&amp;religious_affiliation=all&amp;destination=to&amp;countries=Worldwide&amp;age_group=all&amp;gender=all&amp;pdfMode=false">Data Explorer</a> for data about other religions.</p>
+</div>
+<div id="data-retrieving" class="section level2">
+<h2>Data Retrieving</h2>
+</div>
+<div id="section" class="section level2 tabset">
+<h2></h2>
 <p>The dataset downloaded is the survey result in 234 countries and predictions made upon them (check <a href="http://globalreligiousfutures.org/explorer/about-grf-data" class="uri">http://globalreligiousfutures.org/explorer/about-grf-data</a> for more information). For each of the three representative religions, the number of believers in the year 2010, 2020, 2030, 2040 and 2050 is separately stored and downloaded in different datasets. The three religions mentioned above were selected to show the general trend of the variation of religious population since that comparing to other religions that have large believer community, these three religions were more spread over the world so that could better represent the religious population community despite factors like politic or local culture.</p>
 <p>The code following the download command read the data from the downloaded CSV file and create a data frame named as “Religion_Year” (e.g. Islam_2010) for each single dataset. The “skip” and “nrow” factor in the read.csv2() function serve to skip the description and space lines in the original file.</p>
-<div id="data-retriving-and-chloropleth-visualization" class="section level2">
-<h2>Data Retriving and Chloropleth Visualization</h2>
-<div id="islam-population-2010---2050" class="section level3">
-<h3>Islam Population, 2010 - 2050</h3>
+<div id="islam" class="section level3">
+<h3>Islam</h3>
 <pre class="r"><code>## download the world Islam population data for 2010
 download.file(&quot;http://globalreligiousfutures.org/csv/22411&quot;, &quot;muslim10.csv&quot;)
 m10 &lt;- readLines(&quot;muslim10.csv&quot;)
@@ -376,57 +400,9 @@ download.file(&quot;http://globalreligiousfutures.org/csv/21662&quot;, &quot;mus
 m50 &lt;- readLines(&quot;muslim50.csv&quot;)
 islam_2050 &lt;- read.csv2(text = m50, sep = &quot;,&quot;, header = FALSE, skip = 3, col.names = c(&quot;Country_Code&quot;, 
     &quot;Country&quot;, &quot;Religion_Population&quot;), nrows = length(m50) - 6)</code></pre>
-<p>Plotting the 2010 Islam Population Map</p>
-<pre class="r"><code>#Loading the Color Palette for Map
-color1 &lt;- brewer.pal(5,&quot;YlOrRd&quot;)
-
-# Plotting the Country Heat Map of Muslim Population in 2010
-Islam_2010_iso &lt;- as.character(islam_2010$Country_Code)
-Islam_2010_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2010$Religion_Population)))
-islam_2010_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2010_iso, 
-                                                  value = Islam_2010_Population), 
-                                       joinCode = &quot;ISO2&quot;, 
-                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
-<pre><code>## 224 codes from your data successfully matched countries in the map
-## 11 codes from your data failed to match with a country code in the map
-## 17 codes from the map weren&#39;t represented in your data</code></pre>
-<pre class="r"><code>map1 &lt;- mapCountryData(islam_2010_plot, 
-               nameColumnToPlot = &quot;value&quot;, 
-               mapTitle = &quot;2010 World Muslim Population&quot;, 
-               catMethod = &quot;logFixedWidth&quot;,
-               colourPalette = color1,
-               addLegend = FALSE)
-#add legend 
-do.call(addMapLegend, c(map1,
-                        legendLabels=&quot;all&quot;,
-                        labelFontSize = 0.5,
-                        legendIntervals = &quot;page&quot;,
-                        digits = 4,
-                        sigFigs = 4
-                        ))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<p>Plotting the 2050 Islam Population Map</p>
-<pre class="r"><code># Plotting the Country Heat Map of Muslim Population in 2050
-Islam_2050_iso &lt;- as.character(islam_2050$Country_Code)
-Islam_2050_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2050$Religion_Population)))
-islam_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2050_iso, 
-                                                  value = Islam_2050_Population), 
-                                       joinCode = &quot;ISO2&quot;, 
-                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
-<pre><code>## 224 codes from your data successfully matched countries in the map
-## 21 codes from your data failed to match with a country code in the map
-## 17 codes from the map weren&#39;t represented in your data</code></pre>
-<pre class="r"><code>map2 &lt;- mapCountryData(islam_2050_plot, 
-               nameColumnToPlot = &quot;value&quot;, 
-               mapTitle = &quot;2050 World Muslim Population&quot;, 
-               catMethod = &quot;logFixedWidth&quot;,
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
-<div id="christianity-population-2010---2050" class="section level3">
-<h3>Christianity Population, 2010 - 2050</h3>
+<div id="christianity" class="section level3">
+<h3>Christianity</h3>
 <pre class="r"><code>## download the world Christianity population data for 2010
 download.file(&quot;http://globalreligiousfutures.org/csv/23086&quot;, &quot;crs10.csv&quot;)
 c10 &lt;- readLines(&quot;crs10.csv&quot;)
@@ -476,47 +452,9 @@ chris_2050 &lt;- read.csv2(text = c50,
                         skip = 11,
                         col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
                         nrows = length(c50) - 14)</code></pre>
-<p>Plotting the 2010 Christian Population Map</p>
-<pre class="r"><code># Plotting the Country Heat Map of Christian Population in 2010
-chris_2010_iso &lt;- as.character(chris_2010$Country_Code)
-chris_2010_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(chris_2010$Religion_Population)))
-chris_2010_plot &lt;- joinCountryData2Map(data.frame(country_iso = chris_2010_iso, 
-                                                  value = chris_2010_Population), 
-                                       joinCode = &quot;ISO2&quot;, 
-                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
-<pre><code>## 1120 codes from your data successfully matched countries in the map
-## 78 codes from your data failed to match with a country code in the map
-## 17 codes from the map weren&#39;t represented in your data</code></pre>
-<pre class="r"><code>map2 &lt;- mapCountryData(chris_2010_plot, 
-               nameColumnToPlot = &quot;value&quot;, 
-               mapTitle = &quot;2010 World Christian Population&quot;, 
-               catMethod = &quot;logFixedWidth&quot;,
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>Plotting the 2050 Christian Population Map</p>
-<pre class="r"><code># Plotting the Country Heat Map of Christian Population in 2050
-chris_2050_iso &lt;- as.character(chris_2050$Country_Code)
-chris_2050_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(chris_2050$Religion_Population)))
-chris_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = chris_2050_iso, 
-                                                  value = chris_2050_Population), 
-                                       joinCode = &quot;ISO2&quot;, 
-                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
-<pre><code>## 221 codes from your data successfully matched countries in the map
-## 16 codes from your data failed to match with a country code in the map
-## 20 codes from the map weren&#39;t represented in your data</code></pre>
-<pre class="r"><code>map2 &lt;- mapCountryData(chris_2050_plot, 
-               nameColumnToPlot = &quot;value&quot;, 
-               mapTitle = &quot;2050 World Christian Population&quot;, 
-               catMethod = &quot;logFixedWidth&quot;,
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
-<div id="buddahism-population-2010---2050" class="section level3">
-<h3>Buddahism Population, 2010 - 2050</h3>
+<div id="buddahism" class="section level3">
+<h3>Buddahism</h3>
 <pre class="r"><code>## download the world Buddahism population data for 2010
 download.file(&quot;http://globalreligiousfutures.org/csv/22196&quot;, &quot;buda10.csv&quot;)
 b10 &lt;- readLines(&quot;buda10.csv&quot;)
@@ -566,47 +504,9 @@ buddha_2050 &lt;- read.csv2(text = b50,
                          skip = 11,
                          col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
                          nrows = length(b50) - 14)</code></pre>
-<p>Plotting the 2010 Buddhism Population Map</p>
-<pre class="r"><code># Plotting the Country Heat Map of Buddhism Population in 2010
-buddha_2010_iso &lt;- as.character(buddha_2010$Country_Code)
-buddha_2010_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(buddha_2010$Religion_Population)))
-buddha_2010_plot &lt;- joinCountryData2Map(data.frame(country_iso = buddha_2010_iso, 
-                                                  value = buddha_2010_Population), 
-                                       joinCode = &quot;ISO2&quot;, 
-                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
-<pre><code>## 224 codes from your data successfully matched countries in the map
-## 11 codes from your data failed to match with a country code in the map
-## 17 codes from the map weren&#39;t represented in your data</code></pre>
-<pre class="r"><code>map2 &lt;- mapCountryData(buddha_2010_plot, 
-               nameColumnToPlot = &quot;value&quot;, 
-               mapTitle = &quot;2010 World Buddhism Population&quot;, 
-               catMethod = &quot;logFixedWidth&quot;,
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<p>Plotting the 2050 Buddhism Population Map</p>
-<pre class="r"><code># Plotting the Country Heat Map of Buddhism Population in 2050
-buddha_2050_iso &lt;- as.character(buddha_2050$Country_Code)
-buddha_2050_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(buddha_2050$Religion_Population)))
-buddha_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = buddha_2050_iso, 
-                                                  value = buddha_2050_Population), 
-                                       joinCode = &quot;ISO2&quot;, 
-                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
-<pre><code>## 221 codes from your data successfully matched countries in the map
-## 16 codes from your data failed to match with a country code in the map
-## 20 codes from the map weren&#39;t represented in your data</code></pre>
-<pre class="r"><code>map2 &lt;- mapCountryData(buddha_2050_plot, 
-               nameColumnToPlot = &quot;value&quot;, 
-               mapTitle = &quot;2050 World Buddhism Population&quot;, 
-               catMethod = &quot;logFixedWidth&quot;,
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
-<div id="religious-unaffiliated-population-2010---2050" class="section level3">
-<h3>Religious Unaffiliated Population, 2010 - 2050</h3>
+<div id="religious-unaffiliated" class="section level3">
+<h3>Religious Unaffiliated</h3>
 <pre class="r"><code>## download the world religious unaffiliated population data for 2010
 download.file(&quot;http://globalreligiousfutures.org/csv/23117&quot;, &quot;unaf10.csv&quot;)
 u10 &lt;- readLines(&quot;unaf10.csv&quot;)
@@ -656,9 +556,46 @@ unaffiliated_2050 &lt;- read.csv2(text = u50,
                                skip = 11,
                                col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
                                nrows = length(u50) - 14)</code></pre>
-<p>Plotting the 2010 Religious Unaffiiated Population Map</p>
-<pre class="r"><code># Plotting the Country Heat Map of Religious Unaffiiated Population in 2010
-unaffiliated_2010_iso &lt;- as.character(unaffiliated_2010$Country_Code)
+</div>
+</div>
+<div id="data-processing" class="section level2">
+<h2>Data Processing</h2>
+</div>
+<div id="section-1" class="section level2 tabset">
+<h2></h2>
+<p>The data processing for each religion is showed in this section.</p>
+<div id="spatial-polygon-data-frame" class="section level3">
+<h3>Spatial Polygon Data Frame</h3>
+<p>The column of ISO code for each country is first stored as character variable and the population column is stored seperately as numeric variable. Then these two sets of values are joined together in to a data frame.</p>
+<p>The joinCountryData2Map function turns the data frame into a spatial polygon data frame by specify the “joincode”, which is the ISO2 code in our scenario.</p>
+<pre class="r"><code>Islam_2010_iso &lt;- as.character(islam_2010$Country_Code)
+Islam_2010_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2010$Religion_Population)))
+islam_2010_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2010_iso, 
+                                                  value = Islam_2010_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 11 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>chris_2010_iso &lt;- as.character(chris_2010$Country_Code)
+chris_2010_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(chris_2010$Religion_Population)))
+chris_2010_plot &lt;- joinCountryData2Map(data.frame(country_iso = chris_2010_iso, 
+                                                  value = chris_2010_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 1120 codes from your data successfully matched countries in the map
+## 78 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>buddha_2010_iso &lt;- as.character(buddha_2010$Country_Code)
+buddha_2010_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(buddha_2010$Religion_Population)))
+buddha_2010_plot &lt;- joinCountryData2Map(data.frame(country_iso = buddha_2010_iso, 
+                                                  value = buddha_2010_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 11 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>unaffiliated_2010_iso &lt;- as.character(unaffiliated_2010$Country_Code)
 unaffiliated_2010_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(unaffiliated_2010$Religion_Population)))
 unaffiliated_2010_plot &lt;- joinCountryData2Map(data.frame(country_iso = unaffiliated_2010_iso, 
                                                   value = unaffiliated_2010_Population), 
@@ -667,17 +604,142 @@ unaffiliated_2010_plot &lt;- joinCountryData2Map(data.frame(country_iso = unaffi
 <pre><code>## 221 codes from your data successfully matched countries in the map
 ## 16 codes from your data failed to match with a country code in the map
 ## 20 codes from the map weren&#39;t represented in your data</code></pre>
-<pre class="r"><code>map2 &lt;- mapCountryData(unaffiliated_2010_plot, 
-               nameColumnToPlot = &quot;value&quot;, 
-               mapTitle = &quot;2010 World Religious Unaffiliated Population&quot;, 
-               catMethod = &quot;logFixedWidth&quot;,
-               colourPalette = color1,
-               addLegend = FALSE)
-do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
-<p>Plotting the 2050 Religious Unaffiiated Population Map</p>
-<pre class="r"><code># Plotting the Country Heat Map of Religious Unaffiiated Population in 2050
-unaffiliated_2050_iso &lt;- as.character(unaffiliated_2050$Country_Code)
+<pre class="r"><code>Islam_2020_iso &lt;- as.character(islam_2020$Country_Code)
+Islam_2020_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2020$Religion_Population)))
+islam_2020_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2020_iso, 
+                                                  value = Islam_2020_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 10 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>chris_2020_iso &lt;- as.character(chris_2020$Country_Code)
+chris_2020_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(chris_2020$Religion_Population)))
+chris_2020_plot &lt;- joinCountryData2Map(data.frame(country_iso = chris_2020_iso, 
+                                                  value = chris_2020_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 13 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>buddha_2020_iso &lt;- as.character(buddha_2020$Country_Code)
+buddha_2020_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(buddha_2020$Religion_Population)))
+buddha_2020_plot &lt;- joinCountryData2Map(data.frame(country_iso = buddha_2020_iso, 
+                                                  value = buddha_2020_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 13 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>unaffiliated_2020_iso &lt;- as.character(unaffiliated_2020$Country_Code)
+unaffiliated_2020_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(unaffiliated_2020$Religion_Population)))
+unaffiliated_2020_plot &lt;- joinCountryData2Map(data.frame(country_iso = unaffiliated_2020_iso, 
+                                                  value = unaffiliated_2020_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 13 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>Islam_2030_iso &lt;- as.character(islam_2030$Country_Code)
+Islam_2030_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2030$Religion_Population)))
+islam_2030_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2030_iso, 
+                                                  value = Islam_2030_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 13 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>chris_2030_iso &lt;- as.character(chris_2030$Country_Code)
+chris_2030_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(chris_2030$Religion_Population)))
+chris_2030_plot &lt;- joinCountryData2Map(data.frame(country_iso = chris_2030_iso, 
+                                                  value = chris_2030_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 13 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>buddha_2030_iso &lt;- as.character(buddha_2030$Country_Code)
+buddha_2030_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(buddha_2030$Religion_Population)))
+buddha_2030_plot &lt;- joinCountryData2Map(data.frame(country_iso = buddha_2030_iso, 
+                                                  value = buddha_2030_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 223 codes from your data successfully matched countries in the map
+## 12 codes from your data failed to match with a country code in the map
+## 18 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>unaffiliated_2030_iso &lt;- as.character(unaffiliated_2030$Country_Code)
+unaffiliated_2030_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(unaffiliated_2030$Religion_Population)))
+unaffiliated_2030_plot &lt;- joinCountryData2Map(data.frame(country_iso = unaffiliated_2030_iso, 
+                                                  value = unaffiliated_2030_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 13 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>Islam_2040_iso &lt;- as.character(islam_2040$Country_Code)
+Islam_2040_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2040$Religion_Population)))
+islam_2040_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2040_iso, 
+                                                  value = Islam_2040_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 10 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>chris_2040_iso &lt;- as.character(chris_2040$Country_Code)
+chris_2040_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(chris_2040$Religion_Population)))
+chris_2040_plot &lt;- joinCountryData2Map(data.frame(country_iso = chris_2040_iso, 
+                                                  value = chris_2040_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 13 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>buddha_2040_iso &lt;- as.character(buddha_2040$Country_Code)
+buddha_2040_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(buddha_2040$Religion_Population)))
+buddha_2040_plot &lt;- joinCountryData2Map(data.frame(country_iso = buddha_2040_iso, 
+                                                  value = buddha_2040_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 13 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>unaffiliated_2040_iso &lt;- as.character(unaffiliated_2040$Country_Code)
+unaffiliated_2040_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(unaffiliated_2040$Religion_Population)))
+unaffiliated_2040_plot &lt;- joinCountryData2Map(data.frame(country_iso = unaffiliated_2040_iso, 
+                                                  value = unaffiliated_2040_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 13 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>Islam_2050_iso &lt;- as.character(islam_2050$Country_Code)
+Islam_2050_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2050$Religion_Population)))
+islam_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2050_iso, 
+                                                  value = Islam_2050_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 224 codes from your data successfully matched countries in the map
+## 21 codes from your data failed to match with a country code in the map
+## 17 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>chris_2050_iso &lt;- as.character(chris_2050$Country_Code)
+chris_2050_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(chris_2050$Religion_Population)))
+chris_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = chris_2050_iso, 
+                                                  value = chris_2050_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 221 codes from your data successfully matched countries in the map
+## 16 codes from your data failed to match with a country code in the map
+## 20 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>buddha_2050_iso &lt;- as.character(buddha_2050$Country_Code)
+buddha_2050_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(buddha_2050$Religion_Population)))
+buddha_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = buddha_2050_iso, 
+                                                  value = buddha_2050_Population), 
+                                       joinCode = &quot;ISO2&quot;, 
+                                       nameJoinColumn = &quot;country_iso&quot;)</code></pre>
+<pre><code>## 221 codes from your data successfully matched countries in the map
+## 16 codes from your data failed to match with a country code in the map
+## 20 codes from the map weren&#39;t represented in your data</code></pre>
+<pre class="r"><code>unaffiliated_2050_iso &lt;- as.character(unaffiliated_2050$Country_Code)
 unaffiliated_2050_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(unaffiliated_2050$Religion_Population)))
 unaffiliated_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = unaffiliated_2050_iso, 
                                                   value = unaffiliated_2050_Population), 
@@ -686,18 +748,397 @@ unaffiliated_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = unaffi
 <pre><code>## 221 codes from your data successfully matched countries in the map
 ## 16 codes from your data failed to match with a country code in the map
 ## 20 codes from the map weren&#39;t represented in your data</code></pre>
-<pre class="r"><code>map2 &lt;- mapCountryData(unaffiliated_2050_plot, 
+</div>
+<div id="assembling" class="section level3">
+<h3>Assembling</h3>
+<p>This section provides the data frame for line chart and other statistical graphs. The raw data sets are copied and renamed the column of religion population to include the year for the merging operation. Five data frame are merged simultaneously by Reduce() function, the function provides a so-called “for-each” loop to iterate through all the data frames in the list() funtion.</p>
+<pre class="r"><code>Islam_2020_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2020$Religion_Population)))
+Islam_2030_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2030$Religion_Population)))
+Islam_2040_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2040$Religion_Population)))
+
+islam_total_2010 &lt;- sum(Islam_2010_Population, na.rm = TRUE)
+islam_total_2020 &lt;- sum(Islam_2020_Population, na.rm = TRUE)
+islam_total_2030 &lt;- sum(Islam_2030_Population, na.rm = TRUE)
+islam_total_2040 &lt;- sum(Islam_2040_Population, na.rm = TRUE)
+islam_total_2050 &lt;- sum(Islam_2050_Population, na.rm = TRUE)
+
+chris_2020_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(chris_2020$Religion_Population)))
+chris_2030_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(chris_2030$Religion_Population)))
+chris_2040_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(chris_2040$Religion_Population)))
+
+chris_total_2020 &lt;- sum(chris_2020_Population, na.rm = TRUE)
+chris_total_2030 &lt;- sum(chris_2030_Population, na.rm = TRUE)
+chris_total_2040 &lt;- sum(chris_2040_Population, na.rm = TRUE)
+chris_total_2050 &lt;- sum(chris_2050_Population, na.rm = TRUE)
+
+
+buddha_2020_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(buddha_2020$Religion_Population)))
+buddha_2030_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(buddha_2030$Religion_Population)))
+buddha_2040_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(buddha_2040$Religion_Population)))
+
+buddha_total_2010 &lt;- sum(buddha_2010_Population, na.rm = TRUE)
+buddha_total_2020 &lt;- sum(buddha_2020_Population, na.rm = TRUE)
+buddha_total_2030 &lt;- sum(buddha_2030_Population, na.rm = TRUE)
+buddha_total_2040 &lt;- sum(buddha_2040_Population, na.rm = TRUE)
+buddha_total_2050 &lt;- sum(buddha_2050_Population, na.rm = TRUE)
+
+unaffiliated_2020_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(unaffiliated_2020$Religion_Population)))
+unaffiliated_2030_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(unaffiliated_2030$Religion_Population)))
+unaffiliated_2040_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(unaffiliated_2040$Religion_Population)))
+
+unaffiliated_total_2010 &lt;- sum(unaffiliated_2010_Population, na.rm = TRUE)
+unaffiliated_total_2020 &lt;- sum(unaffiliated_2020_Population, na.rm = TRUE)
+unaffiliated_total_2030 &lt;- sum(unaffiliated_2030_Population, na.rm = TRUE)
+unaffiliated_total_2040 &lt;- sum(unaffiliated_2040_Population, na.rm = TRUE)
+unaffiliated_total_2050 &lt;- sum(unaffiliated_2050_Population, na.rm = TRUE)
+
+#make table
+total_1050 &lt;- matrix(c(islam_total_2010,chris_total_2020,buddha_total_2010,unaffiliated_total_2010,islam_total_2020,chris_total_2020,buddha_total_2020,unaffiliated_total_2020,islam_total_2030,chris_total_2030,buddha_total_2030,unaffiliated_total_2030,islam_total_2040,chris_total_2040,buddha_total_2040,unaffiliated_total_2040,islam_total_2050,chris_total_2050,buddha_total_2050,unaffiliated_total_2050), ncol = 4, byrow = TRUE)
+
+colnames(total_1050) &lt;- c(&quot;Islam&quot;, &quot;Christianity&quot;, &quot;Buddhism&quot;, &quot;Religious Unaffiliated&quot;)
+rownames(total_1050) &lt;- c(&quot;2010&quot;, &quot;2020&quot;, &quot;2030&quot;, &quot;2040&quot;, &quot;2050&quot;)
+
+total_1050 &lt;- as.table(total_1050)
+
+islam_evolusion &lt;- c(islam_total_2010,islam_total_2020,islam_total_2030,islam_total_2040,islam_total_2050)
+
+plot(islam_evolusion)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>plot(total_1050)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+<pre class="r"><code>islam_2010_graph &lt;- islam_2010
+colnames(islam_2010_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2010&quot;)
+
+islam_2020_graph &lt;- islam_2020
+colnames(islam_2020_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2020&quot;)
+
+islam_2030_graph &lt;- islam_2030
+colnames(islam_2030_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2030&quot;)
+
+islam_2040_graph &lt;- islam_2040
+colnames(islam_2040_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2040&quot;)
+
+islam_2050_graph &lt;- islam_2050
+colnames(islam_2050_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2050&quot;)
+
+islam_10_50 &lt;- Reduce(function(x,y) 
+  merge(x, y, by = &quot;Country&quot;), 
+  list(islam_2010_graph, islam_2020_graph, islam_2030_graph, islam_2040_graph, islam_2050_graph))
+
+
+chris_2010_graph &lt;- chris_2010
+colnames(chris_2010_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2010&quot;)
+chris_2020_graph &lt;- chris_2020
+colnames(chris_2020_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2020&quot;)
+chris_2030_graph &lt;- chris_2030
+colnames(chris_2030_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2030&quot;)
+chris_2040_graph &lt;- chris_2040
+colnames(chris_2040_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2040&quot;)
+chris_2050_graph &lt;- chris_2050
+colnames(chris_2050_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2050&quot;)
+
+chris_10_50 &lt;- Reduce(function(x,y) 
+  merge(x, y, by = &quot;Country&quot;), 
+  list(chris_2010_graph, chris_2020_graph, chris_2030_graph, chris_2040_graph, chris_2050_graph))
+
+chris_20_50 &lt;- Reduce(function(x,y) 
+  merge(x, y, by = &quot;Country&quot;), 
+  list(chris_2020_graph, chris_2030_graph, chris_2040_graph, chris_2050_graph))
+
+buddha_2010_graph &lt;- buddha_2010
+colnames(buddha_2010_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2010&quot;)
+buddha_2020_graph &lt;- buddha_2020
+colnames(buddha_2020_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2020&quot;)
+buddha_2030_graph &lt;- buddha_2030
+colnames(buddha_2030_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2030&quot;)
+buddha_2040_graph &lt;- buddha_2040
+colnames(buddha_2040_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2040&quot;)
+buddha_2050_graph &lt;- buddha_2050
+colnames(buddha_2050_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2050&quot;)
+
+buddha_10_50 &lt;- Reduce(function(x,y) 
+  merge(x, y, by = &quot;Country&quot;), 
+  list(buddha_2010_graph, buddha_2020_graph, buddha_2030_graph, buddha_2040_graph, buddha_2050_graph))
+
+unaffiliated_2010_graph &lt;- unaffiliated_2010
+colnames(unaffiliated_2010_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2010&quot;)
+unaffiliated_2020_graph &lt;- unaffiliated_2020
+colnames(unaffiliated_2020_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2020&quot;)
+unaffiliated_2030_graph &lt;- unaffiliated_2030
+colnames(unaffiliated_2030_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2030&quot;)
+unaffiliated_2040_graph &lt;- unaffiliated_2040
+colnames(unaffiliated_2040_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2040&quot;)
+unaffiliated_2050_graph &lt;- unaffiliated_2050
+colnames(unaffiliated_2050_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2050&quot;)
+
+unaffiliated_10_50 &lt;- Reduce(function(x,y) 
+  merge(x, y, by = &quot;Country&quot;), 
+  list(unaffiliated_2010_graph, unaffiliated_2020_graph, unaffiliated_2030_graph, unaffiliated_2040_graph, unaffiliated_2050_graph))</code></pre>
+</div>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<div id="choropleth" class="section level2">
+<h2>Choropleth</h2>
+</div>
+<div id="section-2" class="section level2 tabset">
+<h2></h2>
+<p>In this part, a simple choropleth visualization is performed. To save space, only the religious population in the year 2010 and 2050 is plotted in the choropleth to show a general trend of the country-scale distribution and the changing of religious population.</p>
+<p>The map is produced via “rworldmap” package and the color is chosed from “RColorBrewer” package.</p>
+<p>The mapCountryData method is called to plot the spatial polygon data frame created. The legend of the map is created seperately afterwards using addMapLegend function to make sure the numbers and letters could be controled.</p>
+<div id="islam-1" class="section level3">
+<h3>Islam</h3>
+<pre class="r"><code>#Loading the Color Palette for Map
+color1 &lt;- brewer.pal(5,&quot;YlOrRd&quot;)
+# Plotting the Country Heat Map of Muslim Population in 2010
+map1 &lt;- mapCountryData(islam_2010_plot, 
+               nameColumnToPlot = &quot;value&quot;, 
+               mapTitle = &quot;2010 World Muslim Population&quot;, 
+               catMethod = &quot;logFixedWidth&quot;,
+               colourPalette = color1,
+               addLegend = FALSE)
+#add legend 
+do.call(addMapLegend, c(map1,
+                        legendLabels=&quot;all&quot;,
+                        labelFontSize = 0.5,
+                        legendIntervals = &quot;page&quot;,
+                        digits = 4,
+                        sigFigs = 4
+                        ))</code></pre>
+<div class="figure">
+<img src="index_files/figure-html/unnamed-chunk-8-1.png" alt="Country Heat Map of Muslim Population in 2010" width="672" />
+<p class="caption">
+Country Heat Map of Muslim Population in 2010
+</p>
+</div>
+<pre class="r"><code># Plotting the Country Heat Map of Muslim Population in 2050
+
+
+map2 &lt;- mapCountryData(islam_2050_plot, 
+               nameColumnToPlot = &quot;value&quot;, 
+               mapTitle = &quot;2050 World Muslim Population&quot;, 
+               catMethod = &quot;logFixedWidth&quot;,
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
+<div class="figure">
+<img src="index_files/figure-html/unnamed-chunk-9-1.png" alt="Country Heat Map of Muslim Population in 2050" width="672" />
+<p class="caption">
+Country Heat Map of Muslim Population in 2050
+</p>
+</div>
+</div>
+<div id="christian" class="section level3">
+<h3>Christian</h3>
+<pre class="r"><code># Plotting the Country Heat Map of Christian Population in 2010
+
+
+map2 &lt;- mapCountryData(chris_2010_plot, 
+               nameColumnToPlot = &quot;value&quot;, 
+               mapTitle = &quot;2010 World Christian Population&quot;, 
+               catMethod = &quot;logFixedWidth&quot;,
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code># Plotting the Country Heat Map of Christian Population in 2050
+
+
+map2 &lt;- mapCountryData(chris_2050_plot, 
+               nameColumnToPlot = &quot;value&quot;, 
+               mapTitle = &quot;2050 World Christian Population&quot;, 
+               catMethod = &quot;logFixedWidth&quot;,
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="buddhism" class="section level3">
+<h3>Buddhism</h3>
+<pre class="r"><code># Plotting the Country Heat Map of Buddhism Population in 2010
+
+
+map2 &lt;- mapCountryData(buddha_2010_plot, 
+               nameColumnToPlot = &quot;value&quot;, 
+               mapTitle = &quot;2010 World Buddhism Population&quot;, 
+               catMethod = &quot;logFixedWidth&quot;,
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
+<div class="figure">
+<img src="index_files/figure-html/unnamed-chunk-12-1.png" alt="Country Heat Map of Buddhism Population in 2010" width="672" />
+<p class="caption">
+Country Heat Map of Buddhism Population in 2010
+</p>
+</div>
+<pre class="r"><code># Plotting the Country Heat Map of Buddhism Population in 2050
+
+map2 &lt;- mapCountryData(buddha_2050_plot, 
+               nameColumnToPlot = &quot;value&quot;, 
+               mapTitle = &quot;2050 World Buddhism Population&quot;, 
+               catMethod = &quot;logFixedWidth&quot;,
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
+<div class="figure">
+<img src="index_files/figure-html/unnamed-chunk-13-1.png" alt="Country Heat Map of Buddhism Population in 2050" width="672" />
+<p class="caption">
+Country Heat Map of Buddhism Population in 2050
+</p>
+</div>
+</div>
+<div id="religious-unaffiiated" class="section level3">
+<h3>Religious Unaffiiated</h3>
+<pre class="r"><code># Plotting the Country Heat Map of Religious Unaffiiated Population in 2010
+
+
+map2 &lt;- mapCountryData(unaffiliated_2010_plot, 
+               nameColumnToPlot = &quot;value&quot;, 
+               mapTitle = &quot;2010 World Religious Unaffiliated Population&quot;, 
+               catMethod = &quot;logFixedWidth&quot;,
+               colourPalette = color1,
+               addLegend = FALSE)
+do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
+<div class="figure">
+<img src="index_files/figure-html/unnamed-chunk-14-1.png" alt="Country Heat Map of Religious Unaffiiated Population in 2010" width="672" />
+<p class="caption">
+Country Heat Map of Religious Unaffiiated Population in 2010
+</p>
+</div>
+<pre class="r"><code># Plotting the Country Heat Map of Religious Unaffiiated Population in 2050
+
+map2 &lt;- mapCountryData(unaffiliated_2050_plot, 
                nameColumnToPlot = &quot;value&quot;, 
                mapTitle = &quot;2050 World Religious Unaffiliated Population&quot;, 
                catMethod = &quot;logFixedWidth&quot;,
                colourPalette = color1,
                addLegend = FALSE)
 do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,legendIntervals = &quot;page&quot;,digits = 4,sigFigs = 4))</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<div class="figure">
+<img src="index_files/figure-html/unnamed-chunk-15-1.png" alt="Country Heat Map of Religious Unaffiiated Population in 2050" width="672" />
+<p class="caption">
+Country Heat Map of Religious Unaffiiated Population in 2050
+</p>
 </div>
 </div>
-<div id="bubble-plot-for-the-2010-muslim-population" class="section level2">
-<h2>Bubble Plot for the 2010 Muslim Population</h2>
+</div>
+<div id="pie-chart" class="section level2">
+<h2>Pie Chart</h2>
+</div>
+<div id="section-3" class="section level2 tabset">
+<h2></h2>
+<p>This page, the pie chart representing the population proportion of different religion in each country from 2010 to 2050 is produced.</p>
+<p>The polulation value in spatial polygon data frames for every religion in each year is retrieved and combined into a new spatial data frame. Then plotted via mapPies function provided by the rworldmap package</p>
+<div id="section-4" class="section level3">
+<h3>2010</h3>
+<pre class="r"><code>#2010
+pie_2010_plot &lt;- islam_2010_plot
+pie_2010_plot$Islam &lt;- islam_2010_plot$value
+pie_2010_plot$Christian &lt;- chris_2010_plot$value
+pie_2010_plot$Buddha &lt;- buddha_2010_plot$value
+pie_2010_plot$Unaffiliated &lt;- unaffiliated_2010_plot$value
+
+mapPies(pie_2010_plot, 
+        nameZs = c(&#39;Islam&#39;,&#39;Christian&#39;,&#39;Buddha&#39;,&#39;Unaffiliated&#39;),
+        zColours = c(&#39;dark green&#39;,&#39;purple&#39;,&#39;red&#39;,&#39;blue&#39;),
+        oceanCol = &#39;light blue&#39;,
+        landCol = &#39;wheat&#39;,
+        symbolSize = 2.6)</code></pre>
+<pre><code>## symbolMaxSize= 7.2  maxSumValues= 1037890000  symbolScale= 0.0002234894 
+## List of 2
+##  $ x: num [1:100] -138 -138 -138 -139 -139 ...
+##  $ y: num [1:100] 66 67.2 68.4 69.6 70.7 ...</code></pre>
+<pre class="r"><code>title(&quot;2010 World Religious Population Pie Chart&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
+<div id="section-5" class="section level3">
+<h3>2020</h3>
+<pre class="r"><code>#2020
+pie_2020_plot &lt;- islam_2020_plot
+pie_2020_plot$Islam &lt;- islam_2020_plot$value
+pie_2020_plot$Christian &lt;- chris_2020_plot$value
+pie_2020_plot$Buddha &lt;- buddha_2020_plot$value
+pie_2020_plot$Unaffiliated &lt;- unaffiliated_2020_plot$value
+
+mapPies(pie_2020_plot, 
+        nameZs = c(&#39;Islam&#39;,&#39;Christian&#39;,&#39;Buddha&#39;,&#39;Unaffiliated&#39;),
+        zColours = c(&#39;dark green&#39;,&#39;purple&#39;,&#39;red&#39;,&#39;blue&#39;),
+        oceanCol = &#39;light blue&#39;,
+        landCol = &#39;wheat&#39;,
+        symbolSize = 2.6)</code></pre>
+<pre><code>## symbolMaxSize= 7.2  maxSumValues= 1075220000  symbolScale= 0.0002195755 
+## List of 2
+##  $ x: num [1:100] -138 -138 -138 -139 -139 ...
+##  $ y: num [1:100] 66 67.2 68.4 69.6 70.7 ...</code></pre>
+<pre class="r"><code>title(&quot;2020 World Religious Population Pie Chart&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+</div>
+<div id="section-6" class="section level3">
+<h3>2030</h3>
+<pre class="r"><code>#2030
+pie_2030_plot &lt;- islam_2030_plot
+pie_2030_plot$Islam &lt;- islam_2030_plot$value
+pie_2030_plot$Christian &lt;- chris_2030_plot$value
+pie_2030_plot$Buddha &lt;- buddha_2030_plot$value
+pie_2030_plot$Unaffiliated &lt;- unaffiliated_2030_plot$value
+
+mapPies(pie_2030_plot, 
+        nameZs = c(&#39;Islam&#39;,&#39;Christian&#39;,&#39;Buddha&#39;,&#39;Unaffiliated&#39;),
+        zColours = c(&#39;dark green&#39;,&#39;purple&#39;,&#39;red&#39;,&#39;blue&#39;),
+        oceanCol = &#39;light blue&#39;,
+        landCol = &#39;wheat&#39;,
+        symbolSize = 2.6)</code></pre>
+<pre><code>## symbolMaxSize= 7.2  maxSumValues= 1081150000  symbolScale= 0.0002189725 
+## List of 2
+##  $ x: num [1:100] -138 -138 -138 -139 -139 ...
+##  $ y: num [1:100] 66 67.2 68.4 69.6 70.7 ...</code></pre>
+<pre class="r"><code>title(&quot;2030 World Religious Population Pie Chart&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+</div>
+<div id="section-7" class="section level3">
+<h3>2040</h3>
+<pre class="r"><code>pie_2040_plot &lt;- islam_2040_plot
+pie_2040_plot$Islam &lt;- islam_2040_plot$value
+pie_2040_plot$Christian &lt;- chris_2040_plot$value
+pie_2040_plot$Buddha &lt;- buddha_2040_plot$value
+pie_2040_plot$Unaffiliated &lt;- unaffiliated_2040_plot$value
+
+mapPies(pie_2040_plot, 
+        nameZs = c(&#39;Islam&#39;,&#39;Christian&#39;,&#39;Buddha&#39;,&#39;Unaffiliated&#39;),
+        zColours = c(&#39;dark green&#39;,&#39;purple&#39;,&#39;red&#39;,&#39;blue&#39;),
+        oceanCol = &#39;light blue&#39;,
+        landCol = &#39;wheat&#39;,
+        symbolSize = 2.6)</code></pre>
+<pre><code>## symbolMaxSize= 7.2  maxSumValues= 1058490000  symbolScale= 0.0002213039 
+## List of 2
+##  $ x: num [1:100] -138 -138 -138 -139 -139 ...
+##  $ y: num [1:100] 66 67.2 68.4 69.6 70.7 ...</code></pre>
+<pre class="r"><code>title(&quot;2040 World Religious Population Pie Chart&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+</div>
+<div id="section-8" class="section level3">
+<h3>2050</h3>
+<pre class="r"><code>#2050
+pie_2050_plot &lt;- islam_2050_plot
+pie_2050_plot$Islam &lt;- islam_2050_plot$value
+pie_2050_plot$Christian &lt;- chris_2050_plot$value
+pie_2050_plot$Buddha &lt;- buddha_2050_plot$value
+pie_2050_plot$Unaffiliated &lt;- unaffiliated_2050_plot$value
+
+mapPies(pie_2050_plot, 
+        nameZs = c(&#39;Islam&#39;,&#39;Christian&#39;,&#39;Buddha&#39;,&#39;Unaffiliated&#39;),
+        zColours = c(&#39;dark green&#39;,&#39;purple&#39;,&#39;red&#39;,&#39;blue&#39;),
+        oceanCol = &#39;light blue&#39;,
+        landCol = &#39;wheat&#39;,
+        symbolSize = 2.6)</code></pre>
+<pre><code>## symbolMaxSize= 7.2  maxSumValues= 1010750000  symbolScale= 0.00022647 
+## List of 2
+##  $ x: num [1:100] -138 -138 -138 -139 -139 ...
+##  $ y: num [1:100] 66 67.2 68.4 69.6 70.7 ...</code></pre>
+<pre class="r"><code>title(&quot;2050 World Religious Population Pie Chart&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>Bubble Plot for the 2010 Muslim Population</p>
 <pre class="r"><code>mapBubbles(islam_2010_plot, 
            nameZSize = &#39;value&#39;, 
            catMethod = &quot;logFixedWidth&quot;,
@@ -705,37 +1146,29 @@ do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,le
            main = &#39;Muslim Population 2010&#39;,
            landCol = &#39;wheat&#39;,
            oceanCol = &#39;light blue&#39;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p><img src="index_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
-<pre class="r"><code>barplotCountryData(islam_2010_plot,
-                   nameColumnToPlot = &#39;value&#39;,
-                   nameCountryColumn = &#39;NAME&#39;,
-                   scaleSameInPanels = TRUE
-                   )</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
-<pre class="r"><code>#Pie chart, for each country, map the population of different religions in a pie chart
-
-#2010
-pie_2010_plot &lt;- islam_2010_plot
-pie_2010_plot$islam &lt;- islam_2010_plot$value
-pie_2010_plot$christian &lt;- chris_2010_plot$value
-pie_2010_plot$buddha &lt;- buddha_2010_plot$value
-pie_2010_plot$Unaffiliated &lt;- unaffiliated_2010_plot$value
-
-mapPies(pie_2010_plot, 
-        nameZs = c(&#39;islam&#39;,&#39;christian&#39;,&#39;buddha&#39;,&#39;Unaffiliated&#39;),
-        zColours = c(&#39;green&#39;,&#39;purple&#39;,&#39;red&#39;,&#39;blue&#39;),
-        oceanCol = &#39;light blue&#39;,
-        landCol = &#39;wheat&#39;,
-        symbolSize = 2.5)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-23-2.png" width="672" /></p>
-<pre><code>## symbolMaxSize= 7.2  maxSumValues= 1037890000  symbolScale= 0.0002234894 
-## List of 2
-##  $ x: num [1:100] -140 -140 -141 -141 -141 ...
-##  $ y: num [1:100] 67.5 68.6 69.8 70.9 72 ...</code></pre>
 </div>
 </div>
-<div id="results" class="section level1">
-<h1>Results</h1>
+<div id="line-chart" class="section level2">
+<h2>Line Chart</h2>
+</div>
+<div id="section-9" class="section level2 tabset">
+<h2></h2>
+<p>*TO BE CONTINUED</p>
+<div id="islam-2" class="section level3">
+<h3>Islam</h3>
+</div>
+<div id="christianity-1" class="section level3">
+<h3>Christianity</h3>
+</div>
+<div id="buddhism-1" class="section level3">
+<h3>Buddhism</h3>
+</div>
+<div id="unaffiliated" class="section level3">
+<h3>Unaffiliated</h3>
+</div>
+</div>
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
