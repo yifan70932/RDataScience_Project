@@ -493,7 +493,7 @@ total_1050 <- as.table(total_1050)
 islam_evolusion <- c(islam_total_2010,islam_total_2020,islam_total_2030,islam_total_2040,islam_total_2050)
 
 plot(islam_evolusion)
-plot(total_1050)
+
 
 
 islam_2010_graph <- islam_2010
