@@ -4,7 +4,7 @@ author: Wang, Yifan
 subtitle: Visualizing the Prediction of Major Religious Population Changing From 2010 to 2050
 output:
     html_document:
-        code_folding: show
+        code_folding: hide
 ---
 
 # Introduction
