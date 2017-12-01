@@ -1,21 +1,23 @@
 ---
 title: "Evolution of Religious Population"
-author: Yifan Wang
+author: Wang, Yifan
 subtitle: Visualizing the Prediction of Major Religious Population Changing From 2010 to 2050
 output:
     html_document:
-       code_folding: hide
+        code_folding: show
 ---
 
 # Introduction
-With the advancement in science and the spreading of secularism, the problem of the necessaries of religions arises. Especially in younger generations, the ratio of people identified as believers stays low. In 2013, for example, only 9.6% of the Jewish population in the states are between age 18-24 while 11.7% of the U.S. population falls into the same age interval (Saxe and Tighe, 2013). And at the same time 25.6% of Jewish community are older than 65 years old while 19.2% of the U.S. population falls into the age interval (Saxe and Tighe, 2013). 
+
+
+With the advancement in science and the spreading of secularism, the problem of the necessaries of religions arises. Especially in younger generations, the ratio of people identified as believers stays low. In 2013, for example, only 9.6% of the Jewish population in the states are between age 18-24 while 11.7% of the U.S. population falls into the same age interval (Saxe and Tighe, 2013). And at the same time 25.6% of Jewish community are older than 65 years old while 19.2% of the U.S. population falls into the age section(Saxe and Tighe, 2013). 
 
 This project aims to provide a visualization of the changing in the religious and unreligious population to answer the following questions: 
 
 a)  **Which religion would experience the most rapid increasing of its follower group in the coming decades and** 
-b)  **How would the skeptic or atheist population varies from now to the year 2050.** 
+b)  **How would the spatial distribution of the religious population for different religions vary in the future.** 
 
-The hypothesis towards this research is that religious population for all the major religions will increase and the community of skeptics would shrink. With the data collected by the Global Religious Future project (http://globalreligiousfutures.org), the evolution, from the year 2010 to 2050, in the population of three major religions (i.e. Christianism, Islam and Buddhism) around the world is processed and displayed. The religious unaffiliated population, in addition, is visualized as well. In this project, a series of static and dynamic maps and images (e.g. animation world map, bubble diagram) were produced to show the trend of the evolution of the religious population. With the result from the data processing, Islam would experience the most obvious increasing in the number of believers from now to the year 2050. While Buddhism and Christianity communities generally remain static in the coming decades. At the same time, the coming decades will witness the decreasing of the religious unaffiliated population.
+The hypothesis towards this research is that religious population for all the major religions will increase while the community of skeptics would shrink. And regions with rapid populaion incresement may boost their local dominate religion's population. With the data collected by the Global Religious Future project (http://globalreligiousfutures.org), the evolution, from the year 2010 to 2050, in the population of three major religions (i.e. Christianism, Islam and Buddhism) around the world is processed and displayed. The religious unaffiliated population, in addition, is visualized as well. In this project, a series of maps and graphs were produced to show the trend of the evolution of the religious population. With the result from the data processing, Islam would experience the most obvious increasing in the number of believers from now to the year 2050. While Buddhism and Christianity communities generally remain static in the coming decades. At the same time, the coming decades will witness the decreasing of the religious unaffiliated population comparing to the general trend of population growth.
   
 > <span style="color:blue">"Religion, it was thought, would thin out from its more robust, supernaturalist forms or die out altogether. But the theory that technological advancement brings inevitable secularization is now being scrapped or radically rethought."</span>                  ~ Timothy Keller, < the Reason for God > 
 
@@ -27,11 +29,15 @@ Using download.file() function to download the surveyed and estimated population
 * Islam
 * Christianity 
 * Buddhism
-* Religious Unaffiliated
+* Religiously Unaffiliated
 
 from the [The Global Religious Future Project](http://globalreligiousfutures.org). You can visit the [Data Explorer](http://globalreligiousfutures.org/explorer#/?subtopic=15&chartType=map&year=2010&data_type=number&religious_affiliation=all&destination=to&countries=Worldwide&age_group=all&gender=all&pdfMode=false) for data about other religions.
 
+
+
 ##Packages
+
+
 ```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 library(dplyr)
 library(tidyr)
@@ -55,11 +61,12 @@ knitr::opts_chunk$set(cache=TRUE)
 
 ##Data Retrieving
 
-##{.tabset}
+##{.tabset .tabset-fade .tabset-pills}
 
-The dataset downloaded is the survey result in 234 countries and predictions made upon them (check http://globalreligiousfutures.org/explorer/about-grf-data for more information). For each of the three representative religions, the number of believers in the year 2010, 2020, 2030, 2040 and 2050 is separately stored and downloaded in different datasets. The three religions mentioned above were selected to show the general trend of the variation of religious population since that comparing to other religions that have large believer community, these three religions were more spread over the world so that could better represent the religious population community despite factors like politic or local culture.
 
-The code following the download command read the data from the downloaded CSV file and create a data frame named as "Religion_Year" (e.g. Islam_2010) for each single dataset. The "skip" and "nrow" factor in the read.csv2() function serve to skip the description and space lines in the original file.
+The dataset downloaded is the survey result in 234 countries and predictions made upon them (check http://globalreligiousfutures.org/explorer/about-grf-data for more information). For each of the three representative religions, the number of believers in the year 2010, 2020, 2030, 2040 and 2050 is separately stored and downloaded in different datasets. The three religions mentioned above were selected to show the general trend of the variation of the religious population since that comparing to other religions that have large believer community, these three beliefs were more spread over the world so that could better represent the religious population community despite factors like politic or local culture.
+
+The code following the download command read the data from the downloaded CSV file and create a data frame named as "Religion_Year" (e.g., Islam_2010) for every single dataset. The "skip" and "nrow" factor in the read.csv2() function serve to skip the description and space lines in the original file.
 
 ###Islam
 ```{r, message=FALSE, warning=FALSE, tidy=TRUE}
@@ -234,7 +241,7 @@ buddha_2050 <- read.csv2(text = b50,
 
 
 
-###Religious Unaffiliated
+###Religiously Unaffiliated
 
 ```{r, warning = FALSE}
 ## download the world religious unaffiliated population data for 2010
@@ -296,9 +303,10 @@ The data processing for each religion is showed in this section.
 
 ###Spatial Polygon Data Frame
 
-The column of ISO code for each country is first stored as character variable and the population column is stored seperately as numeric variable. Then these two sets of values are joined together in to a data frame. 
 
-The joinCountryData2Map function turns the data frame into a spatial polygon data frame by specify the "joincode", which is the ISO2 code in our scenario.
+The column of ISO code for each country is first stored as a character variable, and the population column is stored separately as a numeric variable. Then these two sets of values are joined together into a data frame. 
+
+The joinCountryData2Map function turns the data frame into a spatial polygon data frame by specifying the "joincode", which is the ISO2 code in our scenario.
 
 ```{r, message=FALSE, warning=FALSE}
 Islam_2010_iso <- as.character(islam_2010$Country_Code)
@@ -440,7 +448,10 @@ unaffiliated_2050_plot <- joinCountryData2Map(data.frame(country_iso = unaffilia
 
 ###Assembling
 
-This section provides the data frame for line chart and other statistical graphs. The raw data sets are copied and renamed the column of religion population to include the year for the merging operation. Five data frame are merged simultaneously by Reduce() function, the function provides a so-called "for-each" loop to iterate through all the data frames in the list() funtion.
+
+This section provides the data frame for line chart and other statistical graphs. The raw data sets are copied and renamed the column of religion population to include the year for the merging operation. Five data frame are merged simultaneously by Reduce() function; the function provides a so-called "for-each" loop to iterate through all the data frames in the list() function.
+
+
 ```{r, message=FALSE, warning=FALSE}
 Islam_2020_Population <- as.numeric(gsub(",","",as.character(islam_2020$Religion_Population)))
 Islam_2030_Population <- as.numeric(gsub(",","",as.character(islam_2030$Religion_Population)))
@@ -492,7 +503,7 @@ total_1050 <- as.table(total_1050)
 
 islam_evolusion <- c(islam_total_2010,islam_total_2020,islam_total_2030,islam_total_2040,islam_total_2050)
 
-plot(islam_evolusion)
+
 
 
 
@@ -579,14 +590,15 @@ unaffiliated_10_50 <- Reduce(function(x,y)
 
 ##{.tabset}
 
-In this part, a simple choropleth visualization is performed. To save space, only the religious population in the year 2010 and 2050 is plotted in the choropleth to show a general trend of the country-scale distribution and the changing of religious population. 
+In this part, a simple choropleth visualization is performed. To save space, only the religious population in the year 2010 and 2050 is plotted in the choropleth to show a general trend of the country-scale distribution and the changing of the religious population. 
 
-The map is produced via "rworldmap" package and the color is chosed from "RColorBrewer" package.
+The map is produced via "rworldmap" package, and the color is chosen from "RColorBrewer" package. The mapCountryData method is called to plot the spatial polygon data frame created. The legend of the map is created separately afterward using the addMapLegend function to make sure the numbers and letters could be controlled.
 
-The mapCountryData method is called to plot the spatial polygon data frame created. The legend of the map is created seperately afterwards using addMapLegend function to make sure the numbers and letters could be controled.
+These graphs serve to show the spatial distribution of the population of different religions.
 
 
 ###Islam
+The choropleth graphs show a general stable spatial distribution of Islam while it is still noticeable that U.S. and western Europe Muslim population will experience almost the most apparent increasing. Following by Australia and South America countries (e.g., Brazile), who also show enormous expanding in their muslim community. 
 ```{r, echo=TRUE, fig.cap="Country Heat Map of Muslim Population in 2010", message=FALSE, warning=FALSE}
 #Loading the Color Palette for Map
 color1 <- brewer.pal(5,"YlOrRd")
@@ -621,6 +633,10 @@ do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendInterv
 ```
 
 ###Christian
+
+The following two plots show that Christianity population remains its spatial distribution in the coming decades while Canada and northern Europe countries will have a relatively slow increasing speed in their Christian people comparing to the other countries. It could be caused by the low birth rate in these areas and the general population growth in different places.
+
+
 ```{r, message=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Christian Population in 2010
 
@@ -648,6 +664,9 @@ do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendInterv
 ```
 
 ###Buddhism
+
+The Buddhism belief keeps its distribution and population in general, from the following graphs. The only changing could be noticed is that southern and eastern Europe countries seem to have the most obvious expanding in Buddhism population among neighbor regions. The static in the expanding could be related to the doctrine of Buddhism, which, unlike Christianity and Islam, does not consider missionary activity to be important in its belief system.
+
 ```{r, fig.cap="Country Heat Map of Buddhism Population in 2010", message=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Buddhism Population in 2010
 
@@ -673,14 +692,18 @@ map2 <- mapCountryData(buddha_2050_plot,
 do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
 ```
 
-###Religious Unaffiiated
+###Religiously Unaffiiated
+
+The non-religion population remains its distribution while Brazile seems to have an obvious increasement in its skeptic population.
+
+
 ```{r, fig.cap="Country Heat Map of Religious Unaffiiated Population in 2010", message=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Religious Unaffiiated Population in 2010
 
 
 map2 <- mapCountryData(unaffiliated_2010_plot, 
                nameColumnToPlot = "value", 
-               mapTitle = "2010 World Religious Unaffiliated Population", 
+               mapTitle = "2010 World Religiously Unaffiliated Population", 
                catMethod = "logFixedWidth",
                colourPalette = color1,
                addLegend = FALSE)
@@ -692,7 +715,7 @@ do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendInterv
 
 map2 <- mapCountryData(unaffiliated_2050_plot, 
                nameColumnToPlot = "value", 
-               mapTitle = "2050 World Religious Unaffiliated Population", 
+               mapTitle = "2050 World Religiously Unaffiliated Population", 
                catMethod = "logFixedWidth",
                colourPalette = color1,
                addLegend = FALSE)
@@ -704,9 +727,13 @@ do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendInterv
 ##{.tabset}
 
 
-This page, the pie chart representing the population proportion of different religion in each country from 2010 to 2050 is produced.
+In this page, the pie chart representing the population proportion of different religion in each country from 2010 to 2050 is produced.
 
-The polulation value in spatial polygon data frames for every religion in each year is retrieved and combined into a new spatial data frame. Then plotted via mapPies function provided by the rworldmap package
+The population value in spatial polygon data frames for every religion in each year is retrieved and combined into a new spatial data frame. Then plotted via mapPies() function provided by the rworldmap package.
+
+These pie charts aim to provide a country leveled proportion of the population of different religions. Also, the size of the circle in the graphs represents the number of population in each country, which helps to make the global population growth into the count.
+
+These pie charts show a trend that religiously unaffiliated population is increasing in the coming decades, which, is contradicted to what Timothy Keller predicted in her book "The Reason for God."
 
 ###2010
 ```{r, message=FALSE, warning=FALSE}
@@ -797,31 +824,316 @@ mapPies(pie_2050_plot,
 title("2050 World Religious Population Pie Chart")
 ```
 
-Bubble Plot for the 2010 Muslim Population
-```{r, message=FALSE, warning=FALSE}
-mapBubbles(islam_2010_plot, 
-           nameZSize = 'value', 
-           catMethod = "logFixedWidth",
-           numCats = 5,
-           main = 'Muslim Population 2010',
-           landCol = 'wheat',
-           oceanCol = 'light blue')
-```
 
+##Bar Plot
+
+Using barplotCountryData() function in the rworldmap package, the bar plot representing the relative religious population for each country is created in this page. These bar plots serve to answer the question that whether the country ranking of the population in a specific religion changed from 2010 to 2050.
+
+###Islam
+
+###{.tabset}
+
+####2010
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 barplotCountryData(islam_2010_plot,
                    nameColumnToPlot = 'value',
                    nameCountryColumn = 'NAME',
-                   scaleSameInPanels = TRUE
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2010 World Muslim Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
                    )
 ```
+
+####2020
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(islam_2020_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2020 World Muslim Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2030
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(islam_2030_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2030 World Muslim Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2040
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(islam_2040_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2040 World Muslim Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2050
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(islam_2050_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2050 World Muslim Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+###Christianity
+
+###{.tabset}
+
+####2010
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(chris_2010_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2010 World Christian Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2020
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(chris_2020_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2020 World Christian Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2030
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(chris_2030_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2030 World Christian Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+
+####2040
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(chris_2040_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2040 World Christian Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2050
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(chris_2050_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2050 World Christian Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+
+###Buddhism
+
+###{.tabset}
+
+####2010
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(buddha_2010_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2010 World Buddhism Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2020
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(buddha_2020_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2020 World Buddhism Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2030
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(buddha_2030_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2030 World Buddhism Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2040
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(buddha_2040_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2040 World Buddhism Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2050
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(buddha_2050_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2050 World Buddhism Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+###Religiously Unaffiliated
+
+###{.tabset}
+
+####2010
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(unaffiliated_2010_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2010 World Religiously Unaffiliated Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2020
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(unaffiliated_2020_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2020 World Religiously Unaffiliated Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2030
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(unaffiliated_2030_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2030 World Religiously Unaffiliated Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2040
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(unaffiliated_2040_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2040 World Religiously Unaffiliated Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
+####2050
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+barplotCountryData(unaffiliated_2050_plot,
+                   nameColumnToPlot = 'value',
+                   nameCountryColumn = 'NAME',
+                   numPanels = 7,
+                   catMethod = "quantile",
+                   cex = 1.0,
+                   main = "2050 World Religiously Unaffiliated Population Bar Plot",
+                   scaleSameInPanels = TRUE,
+                   na.last = TRUE
+                   )
+```
+
 
 
 ##Line Chart
 
 ##{.tabset}
 
-*TO BE CONTINUED
+**TO BE CONTINUED
 
 
 ###Islam
@@ -839,12 +1151,18 @@ barplotCountryData(islam_2010_plot,
 
 ###Unaffiliated
 
-
+##Percentage Pie Chart
+**TO BE CONTINUED
 
 # Conclusions
 
 
+In conclusion, Islam world would experience the most evident increasing in its follower community. Which will make it have a comparable population with the dominant religion, Christianity. Also, the following decades may witness the expanding of the territory of Islam, which is most likely to be happening in western Europe, western and northern Africa and Russia. Unlike what Timothy Keller had predicted, atheist population keeps increasing in almost the entire world except for China. The most apparent decline in the proportion of non-religion population may happen in the biggest non-religion country in 2010, China, where will witness the growth of Christianity, Islam and Buddhism population. As for Buddhism, which is not famous for its missionary stories, remains its territory and population in eastern Asia.
+
+Furthermore, it worths broader study about the expanding of different belief ideas. From Abrahamic religions to the Hindu-originated religion, then the Marxism, the spatial distribution of each religion's territory may display a relation with the society or time when it was expanded. Just like the colonization of Europeans developed the intelligence of Paul the Apostle, the Ocean trading spread the wisdom in Koran. How would different religions grow in the future where the world has advanced transportation and opened immigration policies?
+
 # References
+
 
 Saxe, L. and E. Tighe (2013). "Estimating and Understanding the Jewish Population in the United States: A Program of Research." Contemporary Jewry 33(1): 43-62.
 

@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Yifan Wang" />
+<meta name="author" content="Wang, Yifan" />
 
 
 <title>Evolution of Religious Population</title>
@@ -171,7 +171,7 @@ $(document).ready(function () {
 </style>
 <script>
 $(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
+  window.initializeCodeFolding("show" === "show");
 });
 </script>
 
@@ -317,20 +317,20 @@ div.tocify {
 
 <h1 class="title toc-ignore">Evolution of Religious Population</h1>
 <h3 class="subtitle"><em>Visualizing the Prediction of Major Religious Population Changing From 2010 to 2050</em></h3>
-<h4 class="author"><em>Yifan Wang</em></h4>
+<h4 class="author"><em>Wang, Yifan</em></h4>
 
 </div>
 
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>With the advancement in science and the spreading of secularism, the problem of the necessaries of religions arises. Especially in younger generations, the ratio of people identified as believers stays low. In 2013, for example, only 9.6% of the Jewish population in the states are between age 18-24 while 11.7% of the U.S. population falls into the same age interval (Saxe and Tighe, 2013). And at the same time 25.6% of Jewish community are older than 65 years old while 19.2% of the U.S. population falls into the age interval (Saxe and Tighe, 2013).</p>
+<p>With the advancement in science and the spreading of secularism, the problem of the necessaries of religions arises. Especially in younger generations, the ratio of people identified as believers stays low. In 2013, for example, only 9.6% of the Jewish population in the states are between age 18-24 while 11.7% of the U.S. population falls into the same age interval (Saxe and Tighe, 2013). And at the same time 25.6% of Jewish community are older than 65 years old while 19.2% of the U.S. population falls into the age section(Saxe and Tighe, 2013).</p>
 <p>This project aims to provide a visualization of the changing in the religious and unreligious population to answer the following questions:</p>
 <ol style="list-style-type: lower-alpha">
 <li><strong>Which religion would experience the most rapid increasing of its follower group in the coming decades and</strong></li>
-<li><strong>How would the skeptic or atheist population varies from now to the year 2050.</strong></li>
+<li><strong>How would the spatial distribution of the religious population for different religions vary in the future.</strong></li>
 </ol>
-<p>The hypothesis towards this research is that religious population for all the major religions will increase and the community of skeptics would shrink. With the data collected by the Global Religious Future project (<a href="http://globalreligiousfutures.org" class="uri">http://globalreligiousfutures.org</a>), the evolution, from the year 2010 to 2050, in the population of three major religions (i.e. Christianism, Islam and Buddhism) around the world is processed and displayed. The religious unaffiliated population, in addition, is visualized as well. In this project, a series of static and dynamic maps and images (e.g. animation world map, bubble diagram) were produced to show the trend of the evolution of the religious population. With the result from the data processing, Islam would experience the most obvious increasing in the number of believers from now to the year 2050. While Buddhism and Christianity communities generally remain static in the coming decades. At the same time, the coming decades will witness the decreasing of the religious unaffiliated population.</p>
+<p>The hypothesis towards this research is that religious population for all the major religions will increase while the community of skeptics would shrink. And regions with rapid populaion incresement may boost their local dominate religion’s population. With the data collected by the Global Religious Future project (<a href="http://globalreligiousfutures.org" class="uri">http://globalreligiousfutures.org</a>), the evolution, from the year 2010 to 2050, in the population of three major religions (i.e. Christianism, Islam and Buddhism) around the world is processed and displayed. The religious unaffiliated population, in addition, is visualized as well. In this project, a series of maps and graphs were produced to show the trend of the evolution of the religious population. With the result from the data processing, Islam would experience the most obvious increasing in the number of believers from now to the year 2050. While Buddhism and Christianity communities generally remain static in the coming decades. At the same time, the coming decades will witness the decreasing of the religious unaffiliated population comparing to the general trend of population growth.</p>
 <blockquote>
 <p><span style="color:blue">“Religion, it was thought, would thin out from its more robust, supernaturalist forms or die out altogether. But the theory that technological advancement brings inevitable secularization is now being scrapped or radically rethought.”</span> ~ Timothy Keller, &lt; the Reason for God &gt;</p>
 </blockquote>
@@ -342,7 +342,7 @@ div.tocify {
 <li>Islam</li>
 <li>Christianity</li>
 <li>Buddhism</li>
-<li>Religious Unaffiliated</li>
+<li>Religiously Unaffiliated</li>
 </ul>
 <p>from the <a href="http://globalreligiousfutures.org">The Global Religious Future Project</a>. You can visit the <a href="http://globalreligiousfutures.org/explorer#/?subtopic=15&amp;chartType=map&amp;year=2010&amp;data_type=number&amp;religious_affiliation=all&amp;destination=to&amp;countries=Worldwide&amp;age_group=all&amp;gender=all&amp;pdfMode=false">Data Explorer</a> for data about other religions.</p>
 <div id="packages" class="section level2">
@@ -365,10 +365,10 @@ knitr::opts_chunk$set(cache = TRUE)</code></pre>
 <div id="data-retrieving" class="section level2">
 <h2>Data Retrieving</h2>
 </div>
-<div id="section" class="section level2 tabset">
+<div id="section" class="section level2 tabset tabset-fade tabset-pills">
 <h2></h2>
-<p>The dataset downloaded is the survey result in 234 countries and predictions made upon them (check <a href="http://globalreligiousfutures.org/explorer/about-grf-data" class="uri">http://globalreligiousfutures.org/explorer/about-grf-data</a> for more information). For each of the three representative religions, the number of believers in the year 2010, 2020, 2030, 2040 and 2050 is separately stored and downloaded in different datasets. The three religions mentioned above were selected to show the general trend of the variation of religious population since that comparing to other religions that have large believer community, these three religions were more spread over the world so that could better represent the religious population community despite factors like politic or local culture.</p>
-<p>The code following the download command read the data from the downloaded CSV file and create a data frame named as “Religion_Year” (e.g. Islam_2010) for each single dataset. The “skip” and “nrow” factor in the read.csv2() function serve to skip the description and space lines in the original file.</p>
+<p>The dataset downloaded is the survey result in 234 countries and predictions made upon them (check <a href="http://globalreligiousfutures.org/explorer/about-grf-data" class="uri">http://globalreligiousfutures.org/explorer/about-grf-data</a> for more information). For each of the three representative religions, the number of believers in the year 2010, 2020, 2030, 2040 and 2050 is separately stored and downloaded in different datasets. The three religions mentioned above were selected to show the general trend of the variation of the religious population since that comparing to other religions that have large believer community, these three beliefs were more spread over the world so that could better represent the religious population community despite factors like politic or local culture.</p>
+<p>The code following the download command read the data from the downloaded CSV file and create a data frame named as “Religion_Year” (e.g., Islam_2010) for every single dataset. The “skip” and “nrow” factor in the read.csv2() function serve to skip the description and space lines in the original file.</p>
 <div id="islam" class="section level3">
 <h3>Islam</h3>
 <pre class="r"><code>## download the world Islam population data for 2010
@@ -505,8 +505,8 @@ buddha_2050 &lt;- read.csv2(text = b50,
                          col.names = c(&quot;Country_Code&quot;,&quot;Country&quot;,&quot;Religion_Population&quot;),
                          nrows = length(b50) - 14)</code></pre>
 </div>
-<div id="religious-unaffiliated" class="section level3">
-<h3>Religious Unaffiliated</h3>
+<div id="religiously-unaffiliated" class="section level3">
+<h3>Religiously Unaffiliated</h3>
 <pre class="r"><code>## download the world religious unaffiliated population data for 2010
 download.file(&quot;http://globalreligiousfutures.org/csv/23117&quot;, &quot;unaf10.csv&quot;)
 u10 &lt;- readLines(&quot;unaf10.csv&quot;)
@@ -566,8 +566,8 @@ unaffiliated_2050 &lt;- read.csv2(text = u50,
 <p>The data processing for each religion is showed in this section.</p>
 <div id="spatial-polygon-data-frame" class="section level3">
 <h3>Spatial Polygon Data Frame</h3>
-<p>The column of ISO code for each country is first stored as character variable and the population column is stored seperately as numeric variable. Then these two sets of values are joined together in to a data frame.</p>
-<p>The joinCountryData2Map function turns the data frame into a spatial polygon data frame by specify the “joincode”, which is the ISO2 code in our scenario.</p>
+<p>The column of ISO code for each country is first stored as a character variable, and the population column is stored separately as a numeric variable. Then these two sets of values are joined together into a data frame.</p>
+<p>The joinCountryData2Map function turns the data frame into a spatial polygon data frame by specifying the “joincode”, which is the ISO2 code in our scenario.</p>
 <pre class="r"><code>Islam_2010_iso &lt;- as.character(islam_2010$Country_Code)
 Islam_2010_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2010$Religion_Population)))
 islam_2010_plot &lt;- joinCountryData2Map(data.frame(country_iso = Islam_2010_iso, 
@@ -751,7 +751,7 @@ unaffiliated_2050_plot &lt;- joinCountryData2Map(data.frame(country_iso = unaffi
 </div>
 <div id="assembling" class="section level3">
 <h3>Assembling</h3>
-<p>This section provides the data frame for line chart and other statistical graphs. The raw data sets are copied and renamed the column of religion population to include the year for the merging operation. Five data frame are merged simultaneously by Reduce() function, the function provides a so-called “for-each” loop to iterate through all the data frames in the list() funtion.</p>
+<p>This section provides the data frame for line chart and other statistical graphs. The raw data sets are copied and renamed the column of religion population to include the year for the merging operation. Five data frame are merged simultaneously by Reduce() function; the function provides a so-called “for-each” loop to iterate through all the data frames in the list() function.</p>
 <pre class="r"><code>Islam_2020_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2020$Religion_Population)))
 Islam_2030_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2030$Religion_Population)))
 Islam_2040_Population &lt;- as.numeric(gsub(&quot;,&quot;,&quot;&quot;,as.character(islam_2040$Religion_Population)))
@@ -802,9 +802,11 @@ total_1050 &lt;- as.table(total_1050)
 
 islam_evolusion &lt;- c(islam_total_2010,islam_total_2020,islam_total_2030,islam_total_2040,islam_total_2050)
 
-plot(islam_evolusion)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<pre class="r"><code>islam_2010_graph &lt;- islam_2010
+
+
+
+
+islam_2010_graph &lt;- islam_2010
 colnames(islam_2010_graph) &lt;- c(&quot;Country_Code&quot;, &quot;Country&quot;, &quot;Religion_Population_2010&quot;)
 
 islam_2020_graph &lt;- islam_2020
@@ -882,11 +884,12 @@ unaffiliated_10_50 &lt;- Reduce(function(x,y)
 </div>
 <div id="section-2" class="section level2 tabset">
 <h2></h2>
-<p>In this part, a simple choropleth visualization is performed. To save space, only the religious population in the year 2010 and 2050 is plotted in the choropleth to show a general trend of the country-scale distribution and the changing of religious population.</p>
-<p>The map is produced via “rworldmap” package and the color is chosed from “RColorBrewer” package.</p>
-<p>The mapCountryData method is called to plot the spatial polygon data frame created. The legend of the map is created seperately afterwards using addMapLegend function to make sure the numbers and letters could be controled.</p>
+<p>In this part, a simple choropleth visualization is performed. To save space, only the religious population in the year 2010 and 2050 is plotted in the choropleth to show a general trend of the country-scale distribution and the changing of the religious population.</p>
+<p>The map is produced via “rworldmap” package, and the color is chosen from “RColorBrewer” package. The mapCountryData method is called to plot the spatial polygon data frame created. The legend of the map is created separately afterward using the addMapLegend function to make sure the numbers and letters could be controlled.</p>
+<p>These graphs serve to show the spatial distribution of the population of different religions.</p>
 <div id="islam-1" class="section level3">
 <h3>Islam</h3>
+<p>The choropleth graphs show a general stable spatial distribution of Islam while it is still noticeable that U.S. and western Europe Muslim population will experience almost the most apparent increasing. Following by Australia and South America countries (e.g., Brazile), who also show enormous expanding in their muslim community.</p>
 <pre class="r"><code>#Loading the Color Palette for Map
 color1 &lt;- brewer.pal(5,&quot;YlOrRd&quot;)
 # Plotting the Country Heat Map of Muslim Population in 2010
@@ -929,6 +932,7 @@ Country Heat Map of Muslim Population in 2050
 </div>
 <div id="christian" class="section level3">
 <h3>Christian</h3>
+<p>The following two plots show that Christianity population remains its spatial distribution in the coming decades while Canada and northern Europe countries will have a relatively slow increasing speed in their Christian people comparing to the other countries. It could be caused by the low birth rate in these areas and the general population growth in different places.</p>
 <pre class="r"><code># Plotting the Country Heat Map of Christian Population in 2010
 
 
@@ -954,6 +958,7 @@ do.call(addMapLegend, c(map2,legendLabels=&quot;all&quot;,labelFontSize = 0.5,le
 </div>
 <div id="buddhism" class="section level3">
 <h3>Buddhism</h3>
+<p>The Buddhism belief keeps its distribution and population in general, from the following graphs. The only changing could be noticed is that southern and eastern Europe countries seem to have the most obvious expanding in Buddhism population among neighbor regions. The static in the expanding could be related to the doctrine of Buddhism, which, unlike Christianity and Islam, does not consider missionary activity to be important in its belief system.</p>
 <pre class="r"><code># Plotting the Country Heat Map of Buddhism Population in 2010
 
 
@@ -986,14 +991,15 @@ Country Heat Map of Buddhism Population in 2050
 </p>
 </div>
 </div>
-<div id="religious-unaffiiated" class="section level3">
-<h3>Religious Unaffiiated</h3>
+<div id="religiously-unaffiiated" class="section level3">
+<h3>Religiously Unaffiiated</h3>
+<p>The non-religion population remains its distribution while Brazile seems to have an obvious increasement in its skeptic population.</p>
 <pre class="r"><code># Plotting the Country Heat Map of Religious Unaffiiated Population in 2010
 
 
 map2 &lt;- mapCountryData(unaffiliated_2010_plot, 
                nameColumnToPlot = &quot;value&quot;, 
-               mapTitle = &quot;2010 World Religious Unaffiliated Population&quot;, 
+               mapTitle = &quot;2010 World Religiously Unaffiliated Population&quot;, 
                catMethod = &quot;logFixedWidth&quot;,
                colourPalette = color1,
                addLegend = FALSE)
@@ -1008,7 +1014,7 @@ Country Heat Map of Religious Unaffiiated Population in 2010
 
 map2 &lt;- mapCountryData(unaffiliated_2050_plot, 
                nameColumnToPlot = &quot;value&quot;, 
-               mapTitle = &quot;2050 World Religious Unaffiliated Population&quot;, 
+               mapTitle = &quot;2050 World Religiously Unaffiliated Population&quot;, 
                catMethod = &quot;logFixedWidth&quot;,
                colourPalette = color1,
                addLegend = FALSE)
@@ -1026,8 +1032,10 @@ Country Heat Map of Religious Unaffiiated Population in 2050
 </div>
 <div id="section-3" class="section level2 tabset">
 <h2></h2>
-<p>This page, the pie chart representing the population proportion of different religion in each country from 2010 to 2050 is produced.</p>
-<p>The polulation value in spatial polygon data frames for every religion in each year is retrieved and combined into a new spatial data frame. Then plotted via mapPies function provided by the rworldmap package</p>
+<p>In this page, the pie chart representing the population proportion of different religion in each country from 2010 to 2050 is produced.</p>
+<p>The population value in spatial polygon data frames for every religion in each year is retrieved and combined into a new spatial data frame. Then plotted via mapPies() function provided by the rworldmap package.</p>
+<p>These pie charts aim to provide a country leveled proportion of the population of different religions. Also, the size of the circle in the graphs represents the number of population in each country, which helps to make the global population growth into the count.</p>
+<p>These pie charts show a trend that religiously unaffiliated population is increasing in the coming decades, which, is contradicted to what Timothy Keller predicted in her book “The Reason for God.”</p>
 <div id="section-4" class="section level3">
 <h3>2010</h3>
 <pre class="r"><code>#2010
@@ -1136,40 +1144,144 @@ mapPies(pie_2050_plot,
 ##  $ y: num [1:100] 66 67.2 68.4 69.6 70.7 ...</code></pre>
 <pre class="r"><code>title(&quot;2050 World Religious Population Pie Chart&quot;)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
-<p>Bubble Plot for the 2010 Muslim Population</p>
-<pre class="r"><code>mapBubbles(islam_2010_plot, 
-           nameZSize = &#39;value&#39;, 
-           catMethod = &quot;logFixedWidth&quot;,
-           numCats = 5,
-           main = &#39;Muslim Population 2010&#39;,
-           landCol = &#39;wheat&#39;,
-           oceanCol = &#39;light blue&#39;)</code></pre>
+</div>
+</div>
+<div id="bar-plot" class="section level2">
+<h2>Bar Plot</h2>
+<p>Using barplotCountryData() function in the rworldmap package, the bar plot representing the relative religious population for each country is created in this page. These bar plots serve to answer the question that whether the country ranking of the population in a specific religion changed from 2010 to 2050.</p>
+<div id="islam-2" class="section level3">
+<h3>Islam</h3>
+</div>
+<div id="section-9" class="section level3 tabset">
+<h3></h3>
+<div id="section-10" class="section level4">
+<h4>2010</h4>
 <p><img src="index_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+</div>
+<div id="section-11" class="section level4">
+<h4>2020</h4>
 <p><img src="index_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+<div id="section-12" class="section level4">
+<h4>2030</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+</div>
+<div id="section-13" class="section level4">
+<h4>2040</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
+<div id="section-14" class="section level4">
+<h4>2050</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+</div>
+</div>
+<div id="christianity-1" class="section level3">
+<h3>Christianity</h3>
+</div>
+<div id="section-15" class="section level3 tabset">
+<h3></h3>
+<div id="section-16" class="section level4">
+<h4>2010</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+</div>
+<div id="section-17" class="section level4">
+<h4>2020</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+</div>
+<div id="section-18" class="section level4">
+<h4>2030</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+</div>
+<div id="section-19" class="section level4">
+<h4>2040</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+</div>
+<div id="section-20" class="section level4">
+<h4>2050</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+</div>
+</div>
+<div id="buddhism-1" class="section level3">
+<h3>Buddhism</h3>
+</div>
+<div id="section-21" class="section level3 tabset">
+<h3></h3>
+<div id="section-22" class="section level4">
+<h4>2010</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+</div>
+<div id="section-23" class="section level4">
+<h4>2020</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+</div>
+<div id="section-24" class="section level4">
+<h4>2030</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+</div>
+<div id="section-25" class="section level4">
+<h4>2040</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+</div>
+<div id="section-26" class="section level4">
+<h4>2050</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+</div>
+</div>
+<div id="religiously-unaffiliated-1" class="section level3">
+<h3>Religiously Unaffiliated</h3>
+</div>
+<div id="section-27" class="section level3 tabset">
+<h3></h3>
+<div id="section-28" class="section level4">
+<h4>2010</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+</div>
+<div id="section-29" class="section level4">
+<h4>2020</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+</div>
+<div id="section-30" class="section level4">
+<h4>2030</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+</div>
+<div id="section-31" class="section level4">
+<h4>2040</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+</div>
+<div id="section-32" class="section level4">
+<h4>2050</h4>
+<p><img src="index_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
+</div>
 </div>
 </div>
 <div id="line-chart" class="section level2">
 <h2>Line Chart</h2>
 </div>
-<div id="section-9" class="section level2 tabset">
+<div id="section-33" class="section level2 tabset">
 <h2></h2>
-<p>*TO BE CONTINUED</p>
-<div id="islam-2" class="section level3">
+<p>**TO BE CONTINUED</p>
+<div id="islam-3" class="section level3">
 <h3>Islam</h3>
 </div>
-<div id="christianity-1" class="section level3">
+<div id="christianity-2" class="section level3">
 <h3>Christianity</h3>
 </div>
-<div id="buddhism-1" class="section level3">
+<div id="buddhism-2" class="section level3">
 <h3>Buddhism</h3>
 </div>
 <div id="unaffiliated" class="section level3">
 <h3>Unaffiliated</h3>
 </div>
 </div>
+<div id="percentage-pie-chart" class="section level2">
+<h2>Percentage Pie Chart</h2>
+<p>**TO BE CONTINUED</p>
+</div>
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
+<p>In conclusion, Islam world would experience the most evident increasing in its follower community. Which will make it have a comparable population with the dominant religion, Christianity. Also, the following decades may witness the expanding of the territory of Islam, which is most likely to be happening in western Europe, western and northern Africa and Russia. Unlike what Timothy Keller had predicted, atheist population keeps increasing in almost the entire world except for China. The most apparent decline in the proportion of non-religion population may happen in the biggest non-religion country in 2010, China, where will witness the growth of Christianity, Islam and Buddhism population. As for Buddhism, which is not famous for its missionary stories, remains its territory and population in eastern Asia.</p>
+<p>Furthermore, it worths broader study about the expanding of different belief ideas. From Abrahamic religions to the Hindu-originated religion, then the Marxism, the spatial distribution of each religion’s territory may display a relation with the society or time when it was expanded. Just like the colonization of Europeans developed the intelligence of Paul the Apostle, the Ocean trading spread the wisdom in Koran. How would different religions grow in the future where the world has advanced transportation and opened immigration policies?</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
