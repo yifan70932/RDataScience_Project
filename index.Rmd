@@ -10,7 +10,7 @@ output:
 # Introduction
 
 
-With the advancement in science and the spreading of secularism, the problem of the necessaries of religions arises. Especially in younger generations, the ratio of people identified as believers stays low. In 2013, for example, only 9.6% of the Jewish population in the states are between age 18-24 while 11.7% of the U.S. population falls into the same age interval (Saxe and Tighe, 2013). And at the same time 25.6% of Jewish community are older than 65 years old while 19.2% of the U.S. population falls into the age section(Saxe and Tighe, 2013). 
+With the advancing in science and the spreading of secularism, the problem of the necessaries of religions arises. Especially in younger generations, the ratio of people identified as believers stays low. In 2013, for example, only 9.6% of the Jewish population in the states are between age 18-24 while 11.7% of the U.S. population falls into the same age interval (Saxe and Tighe, 2013). At the same time 25.6% of Jewish community are older than 65 years old while 19.2% of the U.S. population falls into the age section (Saxe and Tighe, 2013). 
 
 This project aims to provide a visualization of the changing in the religious and unreligious population to answer the following questions: 
 
@@ -1157,9 +1157,10 @@ barplotCountryData(unaffiliated_2050_plot,
 # Conclusions
 
 
-In conclusion, Islam world would experience the most evident increasing in its follower community. Which will make it have a comparable population with the dominant religion, Christianity. Also, the following decades may witness the expanding of the territory of Islam, which is most likely to be happening in western Europe, western and northern Africa and Russia. Unlike what Timothy Keller had predicted, atheist population keeps increasing in almost the entire world except for China. The most apparent decline in the proportion of non-religion population may happen in the biggest non-religion country in 2010, China, where will witness the growth of Christianity, Islam and Buddhism population. As for Buddhism, which is not famous for its missionary stories, remains its territory and population in eastern Asia.
 
-Furthermore, it worths broader study about the expanding of different belief ideas. From Abrahamic religions to the Hindu-originated religion, then the Marxism, the spatial distribution of each religion's territory may display a relation with the society or time when it was expanded. Just like the colonization of Europeans developed the intelligence of Paul the Apostle, the Ocean trading spread the wisdom in Koran. How would different religions grow in the future where the world has advanced transportation and opened immigration policies?
+In conclusion, Islam world would experience the most evident increasing in its follower community. Which will make it has a comparable population with the dominant religion, Christianity. Also, the following decades may witness the expanding of the territory of Islam, which is most likely to be happening in Russia, western Europe and western and northern Africa. Unlike what Timothy Keller had predicted, atheist population keeps increasing in almost the entire world except for China. The most apparent decline in the proportion of non-religion population may happen in the biggest non-religion country in 2010, China, where will witness the growth of Christianity, Islam and Buddhism population. As for Buddhism, which is not famous for its missionary stories, remains its territory and population in eastern Asia.
+
+Furthermore, it worthes broader study about the expanding of different belief ideas. From Abrahamic religions to the Hindu-originated religion, then the Marxism, the spatial distribution of each religion's territory may display a relation with the society or time when it was expanded. Just like the colonization of Europeans developed the intelligence of Paul the Apostle, the ocean commercial trading spreaded the wisdom in Koran. How would different religions grow in the future where the world has advanced transportation and opened immigration policies?
 
 # References
 
