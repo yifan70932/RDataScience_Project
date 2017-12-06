@@ -38,7 +38,7 @@ from the [The Global Religious Future Project](http://globalreligiousfutures.org
 ##Packages
 
 
-```{r, message=FALSE, warning=FALSE, tidy=TRUE}
+```{r, message=FALSE, result=FALSE, warning=FALSE, tidy=TRUE}
 library(dplyr)
 library(tidyr)
 library(data.table)
@@ -52,6 +52,8 @@ library(jsonlite)
 library(geojsonio)
 library(leaflet)
 library(mapplots)
+library(DT)
+library(readr)
 knitr::opts_chunk$set(cache=TRUE)
 ```
 
@@ -69,7 +71,7 @@ The dataset downloaded is the survey result in 234 countries and predictions mad
 The code following the download command read the data from the downloaded CSV file and create a data frame named as "Religion_Year" (e.g., Islam_2010) for every single dataset. The "skip" and "nrow" factor in the read.csv2() function serve to skip the description and space lines in the original file.
 
 ###Islam
-```{r, message=FALSE, warning=FALSE, tidy=TRUE}
+```{r, message=FALSE, warning=FALSE, tidy=TRUE, result=FALSE}
 ## download the world Islam population data for 2010
 download.file("http://globalreligiousfutures.org/csv/22411", "muslim10.csv")
 m10 <- readLines("muslim10.csv")
@@ -81,7 +83,7 @@ islam_2010 <- read.csv2(text = m10,
                         nrows = length(m10) - 16)
 
 ## download the world Islam population data for 2020
-download.file("http://globalreligiousfutures.org/csv/21689", "muslim20.csv")
+download.file("http://globalreligiousfutures.org/csv/23981", "muslim20.csv")
 m20 <- readLines("muslim20.csv")
 islam_2020 <- read.csv2(text = m20, 
                         sep = ",", 
@@ -91,7 +93,7 @@ islam_2020 <- read.csv2(text = m20,
                         nrows = length(m20) - 17)
 
 ## download the world Islam population data for 2030
-download.file("http://globalreligiousfutures.org/csv/21688", "muslim30.csv")
+download.file("http://globalreligiousfutures.org/csv/23982", "muslim30.csv")
 m30 <- readLines("muslim30.csv")
 islam_2030 <- read.csv2(text = m30, 
                         sep = ",", 
@@ -101,7 +103,7 @@ islam_2030 <- read.csv2(text = m30,
                         nrows = length(m30) - 14)
 
 ## download the world Islam population data for 2040
-download.file("http://globalreligiousfutures.org/csv/21686", "muslim40.csv")
+download.file("http://globalreligiousfutures.org/csv/23983", "muslim40.csv")
 m40 <- readLines("muslim40.csv")
 islam_2040 <- read.csv2(text = m40, 
                        sep = ",", 
@@ -111,7 +113,7 @@ islam_2040 <- read.csv2(text = m40,
                        nrows = length(m40) - 17)
 
 ## download the world Islam population data for 2050
-download.file("http://globalreligiousfutures.org/csv/21662", "muslim50.csv")
+download.file("http://globalreligiousfutures.org/csv/23899", "muslim50.csv")
 m50 <- readLines("muslim50.csv")
 islam_2050 <- read.csv2(text = m50, 
                         sep = ",", 
@@ -127,7 +129,7 @@ islam_2050 <- read.csv2(text = m50,
 
 ###Christianity
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results=FALSE}
 ## download the world Christianity population data for 2010
 download.file("http://globalreligiousfutures.org/csv/23086", "crs10.csv")
 c10 <- readLines("crs10.csv")
@@ -185,7 +187,7 @@ chris_2050 <- read.csv2(text = c50,
 
 ###Buddahism
 
-```{r, warning = FALSE}
+```{r, warning = FALSE, results=FALSE}
 ## download the world Buddahism population data for 2010
 download.file("http://globalreligiousfutures.org/csv/22196", "buda10.csv")
 b10 <- readLines("buda10.csv")
@@ -308,7 +310,7 @@ The column of ISO code for each country is first stored as a character variable,
 
 The joinCountryData2Map function turns the data frame into a spatial polygon data frame by specifying the "joincode", which is the ISO2 code in our scenario.
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results=FALSE}
 Islam_2010_iso <- as.character(islam_2010$Country_Code)
 Islam_2010_Population <- as.numeric(gsub(",","",as.character(islam_2010$Religion_Population)))
 islam_2010_plot <- joinCountryData2Map(data.frame(country_iso = Islam_2010_iso, 
@@ -446,13 +448,75 @@ unaffiliated_2050_plot <- joinCountryData2Map(data.frame(country_iso = unaffilia
 
 ```
 
+
+
 ###Assembling
 
 
 This section provides the data frame for line chart and other statistical graphs. The raw data sets are copied and renamed the column of religion population to include the year for the merging operation. Five data frame are merged simultaneously by Reduce() function; the function provides a so-called "for-each" loop to iterate through all the data frames in the list() function.
 
 
+
 ```{r, message=FALSE, warning=FALSE}
+islam10df <- data.frame(country_iso = Islam_2010_iso, 
+                        IslamPopulation_2010 = Islam_2010_Population)
+islam20df <- data.frame(country_iso = Islam_2020_iso, 
+                        IslamPopulation_2020 = Islam_2020_Population)
+islam30df <- data.frame(country_iso = Islam_2030_iso, 
+                        IslamPopulation_2030 = Islam_2030_Population)
+islam40df <- data.frame(country_iso = Islam_2040_iso, 
+                        IslamPopulation_2040 = Islam_2040_Population)
+islam50df <- data.frame(country_iso = Islam_2050_iso, 
+                        IslamPopulation_2050 = Islam_2050_Population)
+islam_df <- Reduce(function(x,y) 
+  merge(x, y, by = "country_iso"), 
+  list(islam10df, islam20df, islam30df, islam40df, islam50df))
+
+#chris10df <- data.frame(country_iso = chris_2010_iso, 
+ #                       chris_Population_2010 = chris_2010_Population)
+chris20df <- data.frame(country_iso = chris_2020_iso, 
+                        chrisPopulation_2020 = chris_2020_Population)
+chris30df <- data.frame(country_iso = chris_2030_iso, 
+                        chrisPopulation_2030 = chris_2030_Population)
+chris40df <- data.frame(country_iso = chris_2040_iso, 
+                        chrisPopulation_2040 = chris_2040_Population)
+chris50df <- data.frame(country_iso = chris_2050_iso, 
+                        chrisPopulation_2050 = chris_2050_Population)
+chris_df <- Reduce(function(x,y) 
+  merge(x, y, by = "country_iso"), 
+  list(chris20df, chris30df, chris40df, chris50df))
+
+
+buddha10df <- data.frame(country_iso = buddha_2010_iso, 
+                        buddhaPopulation_2010 = buddha_2010_Population)
+buddha20df <- data.frame(country_iso = buddha_2020_iso, 
+                        buddhaPopulation_2020 = buddha_2020_Population)
+buddha30df <- data.frame(country_iso = buddha_2030_iso, 
+                        buddhaPopulation_2030 = buddha_2030_Population)
+buddha40df <- data.frame(country_iso = buddha_2040_iso, 
+                        buddhaPopulation_2040 = buddha_2040_Population)
+buddha50df <- data.frame(country_iso = buddha_2050_iso, 
+                        buddhaPopulation_2050 = buddha_2050_Population)
+buddha_df <- Reduce(function(x,y) 
+  merge(x, y, by = "country_iso"), 
+  list(buddha10df, buddha20df, buddha30df, buddha40df, buddha50df))
+
+unaffiliated10df <- data.frame(country_iso = unaffiliated_2010_iso, 
+                        unaffiliatedPopulation_2010 = unaffiliated_2010_Population)
+unaffiliated20df <- data.frame(country_iso = unaffiliated_2020_iso, 
+                        unaffiliatedPopulation_2020 = unaffiliated_2020_Population)
+unaffiliated30df <- data.frame(country_iso = unaffiliated_2030_iso, 
+                        unaffiliatedPopulation_2030 = unaffiliated_2030_Population)
+unaffiliated40df <- data.frame(country_iso = unaffiliated_2040_iso, 
+                        unaffiliatedPopulation_2040 = unaffiliated_2040_Population)
+unaffiliated50df <- data.frame(country_iso = unaffiliated_2050_iso, 
+                        unaffiliatedPopulation_2050 = unaffiliated_2050_Population)
+unaffiliated_df <- Reduce(function(x,y) 
+  merge(x, y, by = "country_iso"), 
+  list(unaffiliated10df, unaffiliated20df, unaffiliated30df, unaffiliated40df, unaffiliated50df))
+```
+
+```{r, message=FALSE, warning=FALSE, result=FALSE}
 Islam_2020_Population <- as.numeric(gsub(",","",as.character(islam_2020$Religion_Population)))
 Islam_2030_Population <- as.numeric(gsub(",","",as.character(islam_2030$Religion_Population)))
 Islam_2040_Population <- as.numeric(gsub(",","",as.character(islam_2040$Religion_Population)))
@@ -580,8 +644,41 @@ unaffiliated_10_50 <- Reduce(function(x,y)
 ```
 
 
+##Tables
 
+##{.tabset}
 
+###Islam
+```{r}
+islam_df <- islam_df[!(islam_df$country_iso == ""), ]
+datatable(islam_df, options = list(pageLength = 5))
+```
+
+###Christianity
+```{r}
+chris_df <- chris_df[!(chris_df$country_iso == ""), ]
+datatable(chris_df, options = list(pageLength = 5))
+```
+
+###Buddhism
+```{r}
+buddha_df <- buddha_df[!(buddha_df$country_iso == ""), ]
+datatable(buddha_df, options = list(pageLength = 5))
+```
+
+###Religious Unaffiliated
+```{r}
+unaffiliated_df <- unaffiliated_df[!(unaffiliated_df$country_iso == ""), ]
+datatable(unaffiliated_df, options = list(pageLength = 5))
+```
+
+```{r}
+religious_df <- Reduce(function(x,y) 
+  merge(x, y, by = "country_iso"), 
+  list(islam_df, chris_df, buddha_df, unaffiliated_df))
+
+total_df <- data.frame(Year = c(2010, 2020, 2030, 2040, 2050), Islam = c(islam_total_2010, islam_total_2020, islam_total_2030, islam_total_2040, islam_total_2050), Christianity = c(chris_total_2020, chris_total_2020, chris_total_2030, chris_total_2040, chris_total_2050), Buddhism = c(buddha_total_2010, buddha_total_2020, buddha_total_2030, buddha_total_2040, buddha_total_2050), Unaffiliated = c(unaffiliated_total_2010, unaffiliated_total_2020, unaffiliated_total_2030, unaffiliated_total_2040, unaffiliated_total_2050))
+```
 
 # Results
 
@@ -599,7 +696,7 @@ These graphs serve to show the spatial distribution of the population of differe
 
 ###Islam
 The choropleth graphs show a general stable spatial distribution of Islam while it is still noticeable that U.S. and western Europe Muslim population will experience almost the most apparent increasing. Following by Australia and South America countries (e.g., Brazile), who also show enormous expanding in their muslim community. 
-```{r, echo=TRUE, fig.cap="Country Heat Map of Muslim Population in 2010", message=FALSE, warning=FALSE}
+```{r, echo=TRUE, fig.cap="Country Heat Map of Muslim Population in 2010", message=FALSE, warning=FALSE, result=FALSE}
 #Loading the Color Palette for Map
 color1 <- brewer.pal(5,"YlOrRd")
 # Plotting the Country Heat Map of Muslim Population in 2010
@@ -619,7 +716,7 @@ do.call(addMapLegend, c(map1,
                         ))
 ```
 
-```{r, fig.cap="Country Heat Map of Muslim Population in 2050", message=FALSE, warning=FALSE}
+```{r, fig.cap="Country Heat Map of Muslim Population in 2050", result=FALSE, message=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Muslim Population in 2050
 
 
@@ -637,7 +734,7 @@ do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendInterv
 The following two plots show that Christianity population remains its spatial distribution in the coming decades while Canada and northern Europe countries will have a relatively slow increasing speed in their Christian people comparing to the other countries. It could be caused by the low birth rate in these areas and the general population growth in different places.
 
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, result=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Christian Population in 2010
 
 
@@ -650,7 +747,7 @@ map2 <- mapCountryData(chris_2010_plot,
 do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
 ```
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, result=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Christian Population in 2050
 
 
@@ -667,7 +764,7 @@ do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendInterv
 
 The Buddhism belief keeps its distribution and population in general, from the following graphs. The only changing could be noticed is that southern and eastern Europe countries seem to have the most obvious expanding in Buddhism population among neighbor regions. The static in the expanding could be related to the doctrine of Buddhism, which, unlike Christianity and Islam, does not consider missionary activity to be important in its belief system.
 
-```{r, fig.cap="Country Heat Map of Buddhism Population in 2010", message=FALSE, warning=FALSE}
+```{r, fig.cap="Country Heat Map of Buddhism Population in 2010", result=FALSE, message=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Buddhism Population in 2010
 
 
@@ -680,7 +777,7 @@ map2 <- mapCountryData(buddha_2010_plot,
 do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
 ```
 
-```{r, fig.cap="Country Heat Map of Buddhism Population in 2050", message=FALSE, warning=FALSE}
+```{r, fig.cap="Country Heat Map of Buddhism Population in 2050", result=FALSE, message=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Buddhism Population in 2050
 
 map2 <- mapCountryData(buddha_2050_plot, 
@@ -697,7 +794,7 @@ do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendInterv
 The non-religion population remains its distribution while Brazile seems to have an obvious increasement in its skeptic population.
 
 
-```{r, fig.cap="Country Heat Map of Religious Unaffiiated Population in 2010", message=FALSE, warning=FALSE}
+```{r, fig.cap="Country Heat Map of Religious Unaffiiated Population in 2010", result=FALSE, message=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Religious Unaffiiated Population in 2010
 
 
@@ -710,7 +807,7 @@ map2 <- mapCountryData(unaffiliated_2010_plot,
 do.call(addMapLegend, c(map2,legendLabels="all",labelFontSize = 0.5,legendIntervals = "page",digits = 4,sigFigs = 4))
 ```
 
-```{r, fig.cap="Country Heat Map of Religious Unaffiiated Population in 2050", message=FALSE, warning=FALSE}
+```{r, fig.cap="Country Heat Map of Religious Unaffiiated Population in 2050", message=FALSE, result=FALSE, warning=FALSE}
 # Plotting the Country Heat Map of Religious Unaffiiated Population in 2050
 
 map2 <- mapCountryData(unaffiliated_2050_plot, 
@@ -736,7 +833,7 @@ These pie charts aim to provide a country leveled proportion of the population o
 These pie charts show a trend that religiously unaffiliated population is increasing in the coming decades, which, is contradicted to what Timothy Keller predicted in her book "The Reason for God."
 
 ###2010
-```{r, message=FALSE, warning=FALSE}
+```{r, echo=TRUE, message=FALSE, warning=FALSE, result=FALSE}
 #2010
 pie_2010_plot <- islam_2010_plot
 pie_2010_plot$Islam <- islam_2010_plot$value
@@ -754,7 +851,7 @@ title("2010 World Religious Population Pie Chart")
 ```
 
 ###2020
-```{r, message=FALSE, warning=FALSE}
+```{r, echo=TRUE, message=FALSE, warning=FALSE, result=FALSE}
 #2020
 pie_2020_plot <- islam_2020_plot
 pie_2020_plot$Islam <- islam_2020_plot$value
@@ -772,7 +869,7 @@ title("2020 World Religious Population Pie Chart")
 ```
 
 ###2030
-```{r, message=FALSE, warning=FALSE}
+```{r, echo=TRUE, message=FALSE, warning=FALSE, result=FALSE}
 #2030
 pie_2030_plot <- islam_2030_plot
 pie_2030_plot$Islam <- islam_2030_plot$value
@@ -790,7 +887,7 @@ title("2030 World Religious Population Pie Chart")
 ```
 
 ###2040
-```{r, message=FALSE, warning=FALSE}
+```{r, echo=TRUE, message=FALSE, warning=FALSE, result=FALSE}
 pie_2040_plot <- islam_2040_plot
 pie_2040_plot$Islam <- islam_2040_plot$value
 pie_2040_plot$Christian <- chris_2040_plot$value
@@ -807,7 +904,7 @@ title("2040 World Religious Population Pie Chart")
 ```
 
 ###2050
-```{r, message=FALSE, warning=FALSE}
+```{r, echo=TRUE, message=FALSE, warning=FALSE, result=FALSE}
 #2050
 pie_2050_plot <- islam_2050_plot
 pie_2050_plot$Islam <- islam_2050_plot$value
@@ -834,7 +931,7 @@ Using barplotCountryData() function in the rworldmap package, the bar plot repre
 ###{.tabset}
 
 ####2010
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, result=FALSE, warning=FALSE}
 barplotCountryData(islam_2010_plot,
                    nameColumnToPlot = 'value',
                    nameCountryColumn = 'NAME',
@@ -1012,7 +1109,7 @@ barplotCountryData(buddha_2020_plot,
 ```
 
 ####2030
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, result=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 barplotCountryData(buddha_2030_plot,
                    nameColumnToPlot = 'value',
                    nameCountryColumn = 'NAME',
@@ -1139,6 +1236,8 @@ barplotCountryData(unaffiliated_2050_plot,
 ###Islam
 
 ```{r, message=FALSE, warning=FALSE}
+#linegraph <- ggplot(total_df, aes(x = Year, y = Islam))
+
 
 ```
 
@@ -1151,14 +1250,13 @@ barplotCountryData(unaffiliated_2050_plot,
 
 ###Unaffiliated
 
-##Percentage Pie Chart
-**TO BE CONTINUED
+
 
 # Conclusions
 
 
 
-In conclusion, Islam world would experience the most evident increasing in its follower community. Which will make it has a comparable population with the dominant religion, Christianity. Also, the following decades may witness the expanding of the territory of Islam, which is most likely to be happening in Russia, western Europe and western and northern Africa. Unlike what Timothy Keller had predicted, atheist population keeps increasing in almost the entire world except for China. The most apparent decline in the proportion of non-religion population may happen in the biggest non-religion country in 2010, China, where will witness the growth of Christianity, Islam and Buddhism population. As for Buddhism, which is not famous for its missionary stories, remains its territory and population in eastern Asia.
+In conclusion, Islam will experience the most evident increasing on its follower population. Which will make it has a comparable population with the dominant religion, Christianity. Also, the following decades may witness the expanding of the territory of Islam, which is most likely to be happening in Russia, western Europe and western and northern Africa. Unlike what Timothy Keller had predicted, atheist population keeps increasing in almost the entire world except for China. The most apparent decline in the proportion of non-religion population may happen in the currently biggest non-religion country, China. The number of people that believes Christianity, Islam, and Buddhism will grow in China. As for Buddhism, which is not famous for its missionary stories, remains its territory and population in eastern Asia.
 
 Furthermore, it worthes broader study about the expanding of different belief ideas. From Abrahamic religions to the Hindu-originated religion, then the Marxism, the spatial distribution of each religion's territory may display a relation with the society or time when it was expanded. Just like the colonization of Europeans developed the intelligence of Paul the Apostle, the ocean commercial trading spreaded the wisdom in Koran. How would different religions grow in the future where the world has advanced transportation and opened immigration policies?
 
