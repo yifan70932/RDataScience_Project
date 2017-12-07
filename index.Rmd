@@ -1226,31 +1226,6 @@ barplotCountryData(unaffiliated_2050_plot,
 
 
 
-##Line Chart
-
-##{.tabset}
-
-**TO BE CONTINUED
-
-
-###Islam
-
-```{r, message=FALSE, warning=FALSE}
-#linegraph <- ggplot(total_df, aes(x = Year, y = Islam))
-
-
-```
-
-###Christianity
-
-
-
-###Buddhism
-
-
-###Unaffiliated
-
-
 
 # Conclusions
 
